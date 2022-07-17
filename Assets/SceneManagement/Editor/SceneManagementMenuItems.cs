@@ -7,7 +7,7 @@ namespace SceneManagement.Editor
 {
     public static class SceneManagementMenuItems
     {
-        [MenuItem("Scene Managment/Create Scene Settings", false, 10)]
+        [MenuItem("Scene Management/Create Scene Settings", false, 10)]
         private static void CreateNewSceneLoaderSettings()
         {
             var settings = Resources.Load<SceneLoaderSettings>(nameof(SceneLoaderSettings));
