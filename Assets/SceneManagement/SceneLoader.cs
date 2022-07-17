@@ -13,7 +13,7 @@ namespace SceneManagement
         #if SYMBOL_DEFINER_ASSET
         [SymbolDefiner(true)]
         #endif
-        private const string SceneManagementAsset = "SCENE_MANAGMENT_ASSET";
+        private const string SceneManagementAsset = "SCENE_MANAGEMENT_ASSET";
         private static readonly SceneLoaderSettings SceneLoaderSettings;
 
         static SceneLoader()
