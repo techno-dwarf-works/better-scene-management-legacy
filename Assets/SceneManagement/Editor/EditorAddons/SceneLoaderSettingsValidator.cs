@@ -1,9 +1,11 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
+using SceneManagement.Runtime;
 using UnityEditor;
 using UnityEditor.Callbacks;
 using UnityEngine;
 
-namespace SceneManagement.Editor
+namespace SceneManagement.EditorAddons
 {
     /// <summary>
     /// Validator class for <seealso cref="SceneLoaderSettings"/>
@@ -19,7 +21,8 @@ namespace SceneManagement.Editor
 
         public static string ReturnErrorText(SceneLoaderSettings settings)
         {
-            return (settings, settings.Scenes) switch
+            var list = settings == null ? new List<SceneLoaderAsset>() : settings.Scenes;
+            return (settings, list) switch
                    {
                        (null, _) => $"{nameof(SceneLoaderSettings)} missing",
                        (_, null) => $"Scenes is empty in {nameof(SceneLoaderSettings)}",

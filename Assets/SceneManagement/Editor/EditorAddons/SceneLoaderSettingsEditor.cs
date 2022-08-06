@@ -1,6 +1,7 @@
-﻿using UnityEditor;
+﻿using SceneManagement.Runtime;
+using UnityEditor;
 
-namespace SceneManagement.Editor
+namespace SceneManagement.EditorAddons
 {
     /// <summary>
     /// Editor for <seealso cref="SceneLoaderSettings"/> validation

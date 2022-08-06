@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-namespace SceneManagement
+namespace SceneManagement.Runtime
 {
     /// <summary>
     /// Scene Loader Settings

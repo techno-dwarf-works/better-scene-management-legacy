@@ -1,9 +1,10 @@
 ﻿using System;
 using System.IO;
+using SceneManagement.Runtime;
 using UnityEditor;
 using UnityEngine;
 
-namespace SceneManagement.Editor
+namespace SceneManagement.EditorAddons
 {
     public static class SceneManagementMenuItems
     {
