@@ -2,7 +2,7 @@
 using System.IO;
 using UnityEngine;
 
-namespace SceneManagement
+namespace SceneManagement.Runtime
 {
     /// <summary>
     /// Class represents SceneAsset for <seealso cref="SceneLoader"/> 

@@ -2,11 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
+using SceneManagement.Runtime;
 using UnityEditor;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
-namespace SceneManagement.Editor
+namespace SceneManagement.EditorAddons
 {
     [CustomPropertyDrawer(typeof(SceneLoaderAsset))]
     public class SceneLoaderAssetDrawer : PropertyDrawer
@@ -26,7 +27,7 @@ namespace SceneManagement.Editor
         }
 
         private void DrawItem(Rect position, object value, SerializedProperty property, Object targetObject,
-                              GUIContent label)
+            GUIContent label)
         {
             SceneLoaderAsset sceneManagerAsset;
             List<SceneLoaderAsset> bufferList = null;
@@ -49,6 +50,7 @@ namespace SceneManagement.Editor
                 default:
                     return;
             }
+
             SceneAsset oldScene = null;
 
             if (sceneManagerAsset.InstanceID != 0)
@@ -63,6 +65,7 @@ namespace SceneManagement.Editor
                     return;
                 }
             }
+
             EditorGUI.BeginChangeCheck();
             position = new Rect(position.x, position.y + 1f, position.width, EditorGUIUtility.singleLineHeight);
             var newScene = EditorGUI.ObjectField(position, label, oldScene, typeof(SceneAsset), false) as SceneAsset;
@@ -73,7 +76,7 @@ namespace SceneManagement.Editor
         }
 
         private void CheckSceneLoaderAsset(SceneAsset newScene, Object target, IList<SceneLoaderAsset> bufferList,
-                                           int index)
+            int index)
         {
             var newPath = AssetDatabase.GetAssetPath(newScene);
             SceneLoaderAsset newManagerAsset = null;
@@ -88,7 +91,11 @@ namespace SceneManagement.Editor
                 bufferList[index] = newManagerAsset;
                 fieldInfo.SetValue(target, bufferList);
             }
-            CheckBuildScene(newPath, newScene);
+
+            if (target.GetType() != typeof(SceneLoaderSettings))
+            {
+                CheckBuildScene(newPath, newScene);
+            }
         }
 
         private void CheckBuildScene(string path, Object sceneToCheck)
@@ -99,7 +106,7 @@ namespace SceneManagement.Editor
 
             if (buildScene == null)
                 Debug.LogError($"Scene <b>{sceneToCheck.name}</b> not in build. Add scene to SceneLoaderSettings.",
-                               sceneToCheck);
+                    sceneToCheck);
             else if (!buildScene.enabled)
                 Debug.LogError($"Scene <b>{sceneToCheck.name}</b> not enabled in build settings", sceneToCheck);
             errorThrown = true;

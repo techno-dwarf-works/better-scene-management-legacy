@@ -1,7 +1,7 @@
 ﻿using System;
 using UnityEngine.SceneManagement;
 
-namespace SceneManagement
+namespace SceneManagement.Runtime
 {
     /// <summary>
     /// Loading Scene Options

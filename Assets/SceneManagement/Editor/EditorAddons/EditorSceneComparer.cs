@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEditor;
 
-namespace SceneManagement.Editor
+namespace SceneManagement.EditorAddons
 {
     internal class EditorSceneComparer : IEqualityComparer<EditorBuildSettingsScene>
     {
