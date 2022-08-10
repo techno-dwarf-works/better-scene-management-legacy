@@ -16,5 +16,5 @@ MonoBehaviour:
   intermediateScene:
     fullPath: 
     name: 
-    instanceID: 0
+    guid: 
   timeInIntermediateScene: 5
