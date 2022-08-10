@@ -10,13 +10,14 @@ namespace SceneManagement.Runtime
     {
         [SerializeField] private List<SceneLoaderAsset> scenes;
         [SerializeField] private SceneLoaderAsset intermediateScene;
-        [Min(0)] [SerializeField] private float timeInIntermediateScene;
+        [Tooltip("Time in seconds")]
+        [Min(0)] [SerializeField] private int timeInIntermediateScene;
 
         public List<SceneLoaderAsset> Scenes => scenes;
 
         public SceneLoaderAsset IntermediateScene => intermediateScene;
 
-        public float TimeInIntermediateScene => timeInIntermediateScene;
+        public int TimeInIntermediateScene => timeInIntermediateScene;
 
         public void ResetSceneList(List<SceneLoaderAsset> sceneLoaderAssets)
         {

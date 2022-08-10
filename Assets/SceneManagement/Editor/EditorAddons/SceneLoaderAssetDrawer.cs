@@ -24,6 +24,7 @@ namespace SceneManagement.EditorAddons
             var value = fieldInfo.GetValue(target);
             DrawItem(position, value, property, target, label);
             EditorGUI.EndProperty();
+            property.serializedObject.ApplyModifiedProperties();
         }
 
         private void DrawItem(Rect position, object value, SerializedProperty property, Object targetObject,
@@ -53,9 +54,9 @@ namespace SceneManagement.EditorAddons
 
             SceneAsset oldScene = null;
 
-            if (sceneManagerAsset.InstanceID != 0)
+            if (!string.IsNullOrEmpty(sceneManagerAsset.Guid))
             {
-                var path = AssetDatabase.GetAssetPath(sceneManagerAsset.InstanceID);
+                var path = AssetDatabase.GUIDToAssetPath(sceneManagerAsset.Guid);
                 oldScene = AssetDatabase.LoadAssetAtPath<SceneAsset>(path);
 
                 if (!string.Equals(path, sceneManagerAsset.FullPath, StringComparison.Ordinal))
@@ -80,7 +81,8 @@ namespace SceneManagement.EditorAddons
         {
             var newPath = AssetDatabase.GetAssetPath(newScene);
             SceneLoaderAsset newManagerAsset = null;
-            if (newScene is { }) newManagerAsset = new SceneLoaderAsset(newPath, newScene.GetInstanceID());
+            
+            if (newScene is { }) newManagerAsset = new SceneLoaderAsset(newPath, AssetDatabase.AssetPathToGUID(newPath));
 
             if (bufferList == null)
             {

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections;
+﻿using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -11,21 +10,44 @@ namespace SceneManagement.Runtime
     public static class SceneLoaderExtensions
     {
         /// <summary>
-        /// Unloads current Scene
+        /// Unloads scene
         /// </summary>
         /// <param name="scene"></param>
         /// <param name="mode"></param>
-        /// <param name="onSceneReadyToSwitch"></param>
         /// <param name="onProgressChanged"></param>
         /// <returns></returns>
-        public static IEnumerator SceneUnloadOperation(this Scene scene, UnloadSceneOptions mode,
-                                                       Action<AsyncOperation> onSceneReadyToSwitch,
-                                                       Action<float> onProgressChanged = null)
+        public static async Task<AsyncOperation> SceneUnloadOperation(this Scene scene, UnloadSceneOptions mode,
+            SceneLoaderProgressChanged onProgressChanged = null)
         {
             var sceneOperation = SceneManager.UnloadSceneAsync(scene, mode);
             sceneOperation.allowSceneActivation = false;
-            yield return new WaitUntil(() => Until(onProgressChanged, sceneOperation));
-            onSceneReadyToSwitch?.Invoke(sceneOperation);
+            while (!Until(onProgressChanged, sceneOperation))
+            {
+                await Task.Yield();
+            }
+
+            return sceneOperation;
+        } 
+        
+        /// <summary>
+        /// Unloads scene by SceneLoaderAsset
+        /// </summary>
+        /// <param name="sceneLoaderAsset"></param>
+        /// <param name="mode"></param>
+        /// <param name="onProgressChanged"></param>
+        /// <returns></returns>
+        public static async Task<AsyncOperation> SceneUnloadOperation(this SceneLoaderAsset sceneLoaderAsset, UnloadSceneOptions mode,
+            SceneLoaderProgressChanged onProgressChanged = null)
+        {
+            var scene = SceneManager.GetSceneByName(sceneLoaderAsset.Name);
+            var sceneOperation = SceneManager.UnloadSceneAsync(scene, mode);
+            sceneOperation.allowSceneActivation = false;
+            while (!Until(onProgressChanged, sceneOperation))
+            {
+                await Task.Yield();
+            }
+
+            return sceneOperation;
         }
 
         /// <summary>
@@ -34,7 +56,7 @@ namespace SceneManagement.Runtime
         /// <param name="onProgressChanged"></param>
         /// <param name="sceneOperation"></param>
         /// <returns></returns>
-        public static bool Until(Action<float> onProgressChanged, AsyncOperation sceneOperation)
+        public static bool Until(SceneLoaderProgressChanged onProgressChanged, AsyncOperation sceneOperation)
         {
             onProgressChanged?.Invoke(sceneOperation.progress);
             return sceneOperation.progress >= 0.9f;
@@ -45,17 +67,20 @@ namespace SceneManagement.Runtime
         /// </summary>
         /// <param name="sceneAsset"></param>
         /// <param name="mode"></param>
-        /// <param name="onSceneReadyToSwitch"></param>
         /// <param name="onProgressChanged"></param>
         /// <returns></returns>
-        public static IEnumerator SceneLoadOperation(this SceneLoaderAsset sceneAsset, LoadSceneMode mode,
-                                                     Action<AsyncOperation> onSceneReadyToSwitch,
-                                                     Action<float> onProgressChanged = null)
+        public static async Task<AsyncOperation> SceneLoadOperation(this SceneLoaderAsset sceneAsset,
+            LoadSceneMode mode,
+            SceneLoaderProgressChanged onProgressChanged = null)
         {
             var sceneOperation = SceneManager.LoadSceneAsync(sceneAsset.Name, mode);
             sceneOperation.allowSceneActivation = false;
-            yield return new WaitUntil(() => Until(onProgressChanged, sceneOperation));
-            onSceneReadyToSwitch?.Invoke(sceneOperation);
+            while (!Until(onProgressChanged, sceneOperation))
+            {
+                await Task.Yield();
+            }
+
+            return sceneOperation;
         }
 
         /// <summary>
@@ -63,17 +88,19 @@ namespace SceneManagement.Runtime
         /// </summary>
         /// <param name="name"></param>
         /// <param name="mode"></param>
-        /// <param name="onSceneReadyToSwitch"></param>
         /// <param name="onProgressChanged"></param>
         /// <returns></returns>
-        public static IEnumerator SceneUnloadOperation(this string name, UnloadSceneOptions mode,
-                                                       Action<AsyncOperation> onSceneReadyToSwitch,
-                                                       Action<float> onProgressChanged = null)
+        public static async Task<AsyncOperation> SceneUnloadOperation(this string name, UnloadSceneOptions mode,
+            SceneLoaderProgressChanged onProgressChanged = null)
         {
             var sceneOperation = SceneManager.UnloadSceneAsync(name, mode);
             sceneOperation.allowSceneActivation = false;
-            yield return new WaitUntil(() => Until(onProgressChanged, sceneOperation));
-            onSceneReadyToSwitch?.Invoke(sceneOperation);
+            while (!Until(onProgressChanged, sceneOperation))
+            {
+                await Task.Yield();
+            }
+
+            return sceneOperation;
         }
     }
 }

@@ -47,7 +47,7 @@ namespace SceneManagement.EditorAddons
             {
                 if (scenes[i] == null) continue;
                 if (!scenes[i].Validate()) continue;
-                if (scenes.Count(x => x != null && x.Validate() && x.InstanceID == scenes[i].InstanceID) <= 1) continue;
+                if (scenes.Count(x => x != null && x.Validate() && x.Guid == scenes[i].Guid) <= 1) continue;
                 scenes[i] = null;
             }
 

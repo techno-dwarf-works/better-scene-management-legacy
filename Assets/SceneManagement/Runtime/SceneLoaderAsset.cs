@@ -12,24 +12,24 @@ namespace SceneManagement.Runtime
     {
         [SerializeField] private string fullPath;
         [SerializeField] private string name;
-        [SerializeField] private int instanceID;
+        [SerializeField] private string guid;
 
         public string FullPath => fullPath;
 
         public string Name => name;
 
-        public int InstanceID => instanceID;
+        public string Guid => guid;
 
-        public SceneLoaderAsset(string path, int instanceID)
+        public SceneLoaderAsset(string path, string guid)
         {
             fullPath = path;
-            this.instanceID = instanceID;
+            this.guid = guid;
             name = Path.GetFileNameWithoutExtension(path);
         }
 
         public bool Validate()
         {
-            return !string.IsNullOrEmpty(fullPath) && !string.IsNullOrEmpty(name) && instanceID != 0;
+            return !string.IsNullOrEmpty(fullPath) && !string.IsNullOrEmpty(name) && !string.IsNullOrEmpty(guid);
         }
     }
 }

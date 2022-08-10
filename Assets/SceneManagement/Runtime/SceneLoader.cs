@@ -1,5 +1,4 @@
-using System;
-using System.Collections;
+using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -10,10 +9,8 @@ namespace SceneManagement.Runtime
     /// </summary>
     public static class SceneLoader
     {
-        #if SYMBOL_DEFINER_ASSET
-        [SymbolDefiner(true)]
-        #endif
         private const string SceneManagementAsset = "SCENE_MANAGEMENT_ASSET";
+        private const int Seconds = 1000;
         private static readonly SceneLoaderSettings SceneLoaderSettings;
 
         static SceneLoader()
@@ -26,23 +23,15 @@ namespace SceneManagement.Runtime
         /// </summary>
         /// <param name="asset"></param>
         /// <param name="loadSceneOptions"></param>
-        /// <param name="monoBehaviour">MonoBehaviour to load on, use objects marked as DoNotDestroyOnLoad</param>
-        public static void LoadSceneAsync(SceneLoaderAsset asset, LoadSceneOptions loadSceneOptions,
-                                          MonoBehaviour monoBehaviour)
+        public static async void LoadSceneAsync(SceneLoaderAsset asset, LoadSceneOptions loadSceneOptions)
         {
-            if (monoBehaviour == null)
-            {
-                Debug.LogException(new ArgumentException($"{nameof(monoBehaviour)} should be not null"));
-                return;
-            }
-
             switch (loadSceneOptions.UseIntermediate)
             {
                 case true:
-                    monoBehaviour.StartCoroutine(LoadSceneWithIntermediate(asset, loadSceneOptions, monoBehaviour));
+                    await LoadSceneWithIntermediate(asset, loadSceneOptions);
                     break;
                 case false:
-                    monoBehaviour.StartCoroutine(LoadScene(asset, loadSceneOptions));
+                    await LoadScene(asset, loadSceneOptions);
                     break;
             }
         }
@@ -51,53 +40,62 @@ namespace SceneManagement.Runtime
         /// Loads async SceneLoaderAsset with default options
         /// </summary>
         /// <param name="asset"></param>
-        /// <param name="monoBehaviour">MonoBehaviour to load on, use objects marked as DoNotDestroyOnLoad</param>
-        public static void LoadSceneAsync(SceneLoaderAsset asset, MonoBehaviour monoBehaviour)
+        public static void LoadSceneAsync(SceneLoaderAsset asset)
         {
-            LoadSceneAsync(asset, new LoadSceneOptions(), monoBehaviour);
+            LoadSceneAsync(asset, new LoadSceneOptions());
         }
 
-        private static IEnumerator LoadSceneWithIntermediate(SceneLoaderAsset asset, LoadSceneOptions options,
-                                                             MonoBehaviour monoBehaviour)
+        private static async Task WaitUntil(AsyncOperation asyncOperation)
+        {
+            while (!asyncOperation.isDone)
+            {
+                await Task.Yield();
+            }
+        }
+
+        private static async Task LoadSceneWithIntermediate(SceneLoaderAsset asset, LoadSceneOptions options)
         {
             var currentScene = SceneManager.GetActiveScene();
 
-            var intermediateCoroutine =
-                monoBehaviour.StartCoroutine(SceneLoaderSettings.IntermediateScene
-                                                                .SceneLoadOperation(options.SceneLoadMode,
-                                                                     sceneAsyncOperation =>
-                                                                         sceneAsyncOperation.allowSceneActivation =
-                                                                             true));
-            AsyncOperation nextSceneOperation = null;
+            var sceneAsyncOperation =
+                await SceneLoaderSettings.IntermediateScene.SceneLoadOperation(options.SceneLoadMode, options.ProgressChanged);
+            sceneAsyncOperation.allowSceneActivation = true;
 
-            var sceneOperationCoroutine =
-                monoBehaviour.StartCoroutine(asset.SceneLoadOperation(options.SceneLoadMode,
-                                                                      sceneAsyncOperation =>
-                                                                          nextSceneOperation = sceneAsyncOperation));
-            yield return new WaitForSeconds(SceneLoaderSettings.TimeInIntermediateScene);
-            yield return intermediateCoroutine;
-            yield return sceneOperationCoroutine;
+            await WaitUntil(sceneAsyncOperation);
+            
+            var unloadCurrentOperation = await currentScene.SceneUnloadOperation(options.SceneUnloadMode);
+            unloadCurrentOperation.allowSceneActivation = true;
+
+            var nextSceneOperation = await asset.SceneLoadOperation(options.SceneLoadMode, options.ProgressChanged);
+            await Task.Delay(SceneLoaderSettings.TimeInIntermediateScene * Seconds);
             nextSceneOperation.allowSceneActivation = true;
-            if (options.SceneLoadMode == LoadSceneMode.Single) yield break;
-            yield return new WaitUntil(() => nextSceneOperation.isDone);
 
-            yield return currentScene.SceneUnloadOperation(options.SceneUnloadMode,
-                                                           operation => { operation.allowSceneActivation = true; });
+            if (options.SceneLoadMode == LoadSceneMode.Single) return;
+
+            await WaitUntil(nextSceneOperation);
+            
+            var unloadIntermediate =
+                await SceneLoaderSettings.IntermediateScene.SceneUnloadOperation(options.SceneUnloadMode);
+            unloadIntermediate.allowSceneActivation = true;
+
+            await WaitUntil(unloadIntermediate);
         }
 
-        private static IEnumerator LoadScene(SceneLoaderAsset asset, LoadSceneOptions options)
+        private static async Task LoadScene(SceneLoaderAsset asset, LoadSceneOptions options)
         {
             var currentScene = SceneManager.GetActiveScene();
-            AsyncOperation nextSceneOperation = null;
-
-            yield return asset.SceneLoadOperation(options.SceneLoadMode,
-                                                  sceneOperation => nextSceneOperation = sceneOperation);
+            var nextSceneOperation =
+                await asset.SceneLoadOperation(options.SceneLoadMode, options.ProgressChanged);
             nextSceneOperation.allowSceneActivation = true;
-            if (options.SceneLoadMode == LoadSceneMode.Single) yield break;
-            yield return new WaitUntil(() => nextSceneOperation.isDone);
-
-            yield return currentScene.SceneUnloadOperation(options.SceneUnloadMode,
-                                                           operation => { operation.allowSceneActivation = true; });
+            
+            await WaitUntil(nextSceneOperation);
+            
+            if (options.SceneLoadMode == LoadSceneMode.Single) return;
+            
+            var operation = await currentScene.SceneUnloadOperation(options.SceneUnloadMode);
+            operation.allowSceneActivation = true;
+            
+            await WaitUntil(operation);
         }
     }
 }
