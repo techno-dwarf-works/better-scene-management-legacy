@@ -23,7 +23,7 @@ namespace SceneManagement.Runtime
         /// </summary>
         /// <param name="asset"></param>
         /// <param name="loadSceneOptions"></param>
-        public static async void LoadSceneAsync(SceneLoaderAsset asset, LoadSceneOptions loadSceneOptions)
+        public static async Task LoadSceneAsync(SceneLoaderAsset asset, LoadSceneOptions loadSceneOptions)
         {
             switch (loadSceneOptions.UseIntermediate)
             {
@@ -40,17 +40,9 @@ namespace SceneManagement.Runtime
         /// Loads async SceneLoaderAsset with default options
         /// </summary>
         /// <param name="asset"></param>
-        public static void LoadSceneAsync(SceneLoaderAsset asset)
+        public static async Task LoadSceneAsync(SceneLoaderAsset asset)
         {
-            LoadSceneAsync(asset, new LoadSceneOptions());
-        }
-
-        private static async Task WaitUntil(AsyncOperation asyncOperation)
-        {
-            while (!asyncOperation.isDone)
-            {
-                await Task.Yield();
-            }
+            await LoadSceneAsync(asset, new LoadSceneOptions());
         }
 
         private static async Task LoadSceneWithIntermediate(SceneLoaderAsset asset, LoadSceneOptions options)
@@ -58,11 +50,12 @@ namespace SceneManagement.Runtime
             var currentScene = SceneManager.GetActiveScene();
 
             var sceneAsyncOperation =
-                await SceneLoaderSettings.IntermediateScene.SceneLoadOperation(options.SceneLoadMode, options.ProgressChanged);
+                await SceneLoaderSettings.IntermediateScene.SceneLoadOperation(options.SceneLoadMode,
+                    options.ProgressChanged);
             sceneAsyncOperation.allowSceneActivation = true;
 
-            await WaitUntil(sceneAsyncOperation);
-            
+            await sceneAsyncOperation.WaitUntilDone();
+
             var unloadCurrentOperation = await currentScene.SceneUnloadOperation(options.SceneUnloadMode);
             unloadCurrentOperation.allowSceneActivation = true;
 
@@ -72,13 +65,13 @@ namespace SceneManagement.Runtime
 
             if (options.SceneLoadMode == LoadSceneMode.Single) return;
 
-            await WaitUntil(nextSceneOperation);
-            
+            await nextSceneOperation.WaitUntilDone();
+
             var unloadIntermediate =
                 await SceneLoaderSettings.IntermediateScene.SceneUnloadOperation(options.SceneUnloadMode);
             unloadIntermediate.allowSceneActivation = true;
 
-            await WaitUntil(unloadIntermediate);
+            await unloadIntermediate.WaitUntilDone();
         }
 
         private static async Task LoadScene(SceneLoaderAsset asset, LoadSceneOptions options)
@@ -87,15 +80,15 @@ namespace SceneManagement.Runtime
             var nextSceneOperation =
                 await asset.SceneLoadOperation(options.SceneLoadMode, options.ProgressChanged);
             nextSceneOperation.allowSceneActivation = true;
-            
-            await WaitUntil(nextSceneOperation);
-            
+
+            await nextSceneOperation.WaitUntilDone();
+
             if (options.SceneLoadMode == LoadSceneMode.Single) return;
-            
+
             var operation = await currentScene.SceneUnloadOperation(options.SceneUnloadMode);
             operation.allowSceneActivation = true;
-            
-            await WaitUntil(operation);
+
+            await operation.WaitUntilDone();
         }
     }
 }

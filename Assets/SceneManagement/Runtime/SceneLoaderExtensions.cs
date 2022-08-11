@@ -29,6 +29,14 @@ namespace SceneManagement.Runtime
             return sceneOperation;
         } 
         
+        public static async Task WaitUntilDone(this AsyncOperation asyncOperation)
+        {
+            while (!asyncOperation.isDone)
+            {
+                await Task.Yield();
+            }
+        }
+        
         /// <summary>
         /// Unloads scene by SceneLoaderAsset
         /// </summary>
