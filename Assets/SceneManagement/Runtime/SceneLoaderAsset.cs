@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace SceneManagement.Runtime
 {
@@ -24,7 +25,14 @@ namespace SceneManagement.Runtime
         {
             fullPath = path;
             this.guid = guid;
-            name = Path.GetFileNameWithoutExtension(path);
+            name = Path.GetFileNameWithoutExtension(fullPath);
+        }
+        
+        public SceneLoaderAsset(Scene scene)
+        {
+            fullPath = scene.path;
+            guid = "1";
+            name = Path.GetFileNameWithoutExtension(fullPath);
         }
 
         public bool Validate()
