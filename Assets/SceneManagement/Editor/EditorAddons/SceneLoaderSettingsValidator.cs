@@ -45,20 +45,18 @@ namespace SceneManagement.EditorAddons
 
             for (var i = scenes.Count - 1; i >= 0; i--)
             {
-                if (scenes[i] == null) continue;
-                if (!scenes[i].Validate()) continue;
+                if (scenes[i] == null || !scenes[i].Validate()) continue;
                 if (scenes.Count(x => x != null && x.Validate() && x.Guid == scenes[i].Guid) <= 1) continue;
                 scenes[i] = null;
             }
 
-            if (settings.IntermediateScene != null &&
-                settings.IntermediateScene.Validate())
+            if (settings.IntermediateScene != null && settings.IntermediateScene.Validate())
                 scenes.Remove(settings.IntermediateScene);
+            
             settings.ResetSceneList(scenes);
             var sceneLoaderAssets = settings.Scenes.Where(x => x != null && x.Validate()).ToList();
 
-            if (settings.IntermediateScene != null &&
-                settings.IntermediateScene.Validate())
+            if (settings.IntermediateScene != null && settings.IntermediateScene.Validate())
                 sceneLoaderAssets.Add(settings.IntermediateScene);
 
             var newScenes = sceneLoaderAssets
