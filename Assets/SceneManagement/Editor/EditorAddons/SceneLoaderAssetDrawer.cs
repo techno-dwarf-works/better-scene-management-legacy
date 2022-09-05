@@ -4,7 +4,9 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using SceneManagement.Runtime;
 using UnityEditor;
+using UnityEditor.SceneManagement;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using Object = UnityEngine.Object;
 
 namespace SceneManagement.EditorAddons
@@ -13,91 +15,54 @@ namespace SceneManagement.EditorAddons
     public class SceneLoaderAssetDrawer : PropertyDrawer
     {
         private bool errorThrown;
+        private const string NamePropertyPath = "name";
+        private const string FullPathPropertyPath = "fullPath";
+        private const string GUIDPropertyPath = "guid";
 
         // Draw the property inside the given rect
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
         {
             // Using BeginProperty / EndProperty on the parent property means that
             // prefab override logic works on the entire property.
-            EditorGUI.BeginProperty(position, label, property);
-            var target = property.serializedObject.targetObject;
-            var value = fieldInfo.GetValue(target);
-            DrawItem(position, value, property, target, label);
-            EditorGUI.EndProperty();
-            property.serializedObject.ApplyModifiedProperties();
-        }
-
-        private void DrawItem(Rect position, object value, SerializedProperty property, Object targetObject,
-            GUIContent label)
-        {
-            SceneLoaderAsset sceneManagerAsset;
-            List<SceneLoaderAsset> bufferList = null;
-            var index = -1;
-
-            switch (value)
+            if (!property.type.Equals(nameof(SceneLoaderAsset)))
             {
-                case List<SceneLoaderAsset> list:
-                {
-                    var s = Regex.Match(property.propertyPath, @"\[(.*?)\]").Value.Trim('[', ']');
-                    index = int.Parse(s);
-                    sceneManagerAsset = list[index];
-                    bufferList = list;
-                    label = new GUIContent($"Element {index}");
-                    break;
-                }
-                case SceneLoaderAsset asset:
-                    sceneManagerAsset = asset;
-                    break;
-                default:
-                    return;
+                EditorGUILayout.LabelField($"{property.type} is not supported");
             }
 
-            SceneAsset oldScene = null;
-
-            if (!string.IsNullOrEmpty(sceneManagerAsset.Guid))
+            var fullPath = property.FindPropertyRelative(FullPathPropertyPath);
+            if (fullPath.propertyType == SerializedPropertyType.String)
             {
-                var path = AssetDatabase.GUIDToAssetPath(sceneManagerAsset.Guid);
-                oldScene = AssetDatabase.LoadAssetAtPath<SceneAsset>(path);
+                var currentScene = AssetDatabase.LoadAssetAtPath<SceneAsset>(fullPath.stringValue);
+                var newScene =
+                    EditorGUI.ObjectField(position, label, currentScene, typeof(SceneAsset), false) as SceneAsset;
 
-                if (!string.Equals(path, sceneManagerAsset.FullPath, StringComparison.Ordinal))
+                if (currentScene != newScene)
                 {
-                    CheckSceneLoaderAsset(oldScene, targetObject, bufferList, index);
-                    EditorUtility.SetDirty(targetObject);
-                    return;
+                    errorThrown = false;
+                    var loaderAsset = newScene.ToSceneLoaderAsset();
+                    
+                    UpdateProperty(property, loaderAsset);
+
+                    property.serializedObject.ApplyModifiedProperties();
+                    CheckBuildScene(loaderAsset.FullPath, newScene);
                 }
-            }
-
-            EditorGUI.BeginChangeCheck();
-            position = new Rect(position.x, position.y + 1f, position.width, EditorGUIUtility.singleLineHeight);
-            var newScene = EditorGUI.ObjectField(position, label, oldScene, typeof(SceneAsset), false) as SceneAsset;
-            if (!EditorGUI.EndChangeCheck()) return;
-            errorThrown = false;
-            CheckSceneLoaderAsset(newScene, targetObject, bufferList, index);
-            EditorUtility.SetDirty(targetObject);
-        }
-
-        private void CheckSceneLoaderAsset(SceneAsset newScene, Object target, IList<SceneLoaderAsset> bufferList,
-            int index)
-        {
-            var newPath = AssetDatabase.GetAssetPath(newScene);
-            SceneLoaderAsset newManagerAsset = null;
-            
-            if (newScene is { }) newManagerAsset = new SceneLoaderAsset(newPath, AssetDatabase.AssetPathToGUID(newPath));
-
-            if (bufferList == null)
-            {
-                fieldInfo.SetValue(target, newManagerAsset);
             }
             else
             {
-                bufferList[index] = newManagerAsset;
-                fieldInfo.SetValue(target, bufferList);
+                EditorGUILayout.LabelField($"{property.type} is not supported");
             }
+        }
 
-            if (target.GetType() != typeof(SceneLoaderSettings))
-            {
-                CheckBuildScene(newPath, newScene);
-            }
+        private static void UpdateProperty(SerializedProperty property, SceneLoaderAsset loaderAsset)
+        {
+            var guidPathProperty = property.FindPropertyRelative(GUIDPropertyPath);
+            guidPathProperty.stringValue = loaderAsset.Guid;
+
+            var fullPathProperty = property.FindPropertyRelative(FullPathPropertyPath);
+            fullPathProperty.stringValue = loaderAsset.FullPath;
+
+            var nameProperty = property.FindPropertyRelative(NamePropertyPath);
+            nameProperty.stringValue = loaderAsset.Name;
         }
 
         private void CheckBuildScene(string path, Object sceneToCheck)

@@ -11,8 +11,8 @@ namespace SceneManagement.Runtime
     [Serializable]
     public class SceneLoaderAsset
     {
-        [SerializeField] private string fullPath;
         [SerializeField] private string name;
+        [SerializeField] private string fullPath;
         [SerializeField] private string guid;
 
         public string FullPath => fullPath;
@@ -33,6 +33,11 @@ namespace SceneManagement.Runtime
             fullPath = scene.path;
             guid = "1";
             name = Path.GetFileNameWithoutExtension(fullPath);
+        }
+
+        public bool Equals(SceneLoaderAsset obj)
+        {
+            return name.Equals(obj.name);
         }
 
         public bool Validate()
