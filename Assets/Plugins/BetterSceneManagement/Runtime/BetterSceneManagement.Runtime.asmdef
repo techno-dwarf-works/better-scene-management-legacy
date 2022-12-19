@@ -1,0 +1,16 @@
+{
+    "name": "BetterSceneManagement.Runtime",
+    "rootNamespace": "Better.SceneManagement",
+    "references": [
+        "GUID:28da8d3b12e3efa47928e0c9070f853d"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
