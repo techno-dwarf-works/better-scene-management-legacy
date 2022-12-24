@@ -10,26 +10,6 @@ namespace Better.SceneManagement.Runtime
     public static class SceneLoaderExtensions
     {
         /// <summary>
-        /// Unloads scene
-        /// </summary>
-        /// <param name="scene"></param>
-        /// <param name="mode"></param>
-        /// <param name="onProgressChanged"></param>
-        /// <returns></returns>
-        public static async Task<AsyncOperation> SceneUnloadOperation(this Scene scene, UnloadSceneOptions mode,
-            SceneLoaderProgressChanged onProgressChanged = null)
-        {
-            var sceneOperation = SceneManager.UnloadSceneAsync(scene, mode);
-            sceneOperation.allowSceneActivation = false;
-            while (!Until(onProgressChanged, sceneOperation))
-            {
-                await Task.Yield();
-            }
-
-            return sceneOperation;
-        }
-
-        /// <summary>
         /// Unloads scene by SceneLoaderAsset
         /// </summary>
         /// <param name="sceneLoaderAsset"></param>
@@ -37,18 +17,17 @@ namespace Better.SceneManagement.Runtime
         /// <param name="autoSwitch"></param>
         /// <param name="onProgressChanged"></param>
         /// <returns></returns>
-        public static async Task<AsyncOperation> SceneUnloadOperation(this SceneLoaderAsset sceneLoaderAsset, UnloadSceneOptions mode, bool autoSwitch,
+        internal static async Task SceneUnloadOperation(this SceneLoaderAsset sceneLoaderAsset, UnloadSceneOptions mode, bool autoSwitch,
             SceneLoaderProgressChanged onProgressChanged = null)
         {
             var scene = SceneManager.GetSceneByName(sceneLoaderAsset.Name);
+            if (!scene.isLoaded) return;
             var sceneOperation = SceneManager.UnloadSceneAsync(scene, mode);
             sceneOperation.allowSceneActivation = autoSwitch;
             while (!Until(onProgressChanged, sceneOperation))
             {
                 await Task.Yield();
             }
-
-            return sceneOperation;
         }
 
         /// <summary>
@@ -71,7 +50,7 @@ namespace Better.SceneManagement.Runtime
         /// <param name="autoSwitch"></param>
         /// <param name="onProgressChanged"></param>
         /// <returns></returns>
-        public static async Task<AsyncOperation> SceneLoadOperation(this SceneLoaderAsset sceneAsset,
+        internal static async Task<AsyncOperation> SceneLoadOperation(this SceneLoaderAsset sceneAsset,
             LoadSceneMode mode, bool autoSwitch,
             SceneLoaderProgressChanged onProgressChanged = null)
         {
