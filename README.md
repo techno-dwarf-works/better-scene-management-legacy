@@ -1,9 +1,9 @@
-# AdvancedSceneManagement
-Unity Scene Management
+# Better Scene Management
+[![openupm](https://img.shields.io/npm/v/com.uurha.betterscenemanagement?label=openupm&registry_uri=https://package.openupm.com)](https://openupm.com/packages/com.uurha.betterscenemanagement/)
 
 This plugin allows you to serialize scene asset in inspector for loaing via `SceneLoader`.
 
-Usage
+## Usage
 ```c#
 [SerializeField] private SceneLoaderAsset nextScene;
 
@@ -14,7 +14,6 @@ private async void Awake()
     await LoadSceneAsync(asset, new LoadSceneOptions()
         {
          SceneLoadMode = LoadSceneMode.Additive,
-         SceneUnloadMode = UnloadSceneOptions.UnloadAllEmbeddedSceneObjects,
          UseIntermediate = false,
          ProgressChanged = ProgressChanged
         });
@@ -25,3 +24,6 @@ private static void ProgressChanged(float value)
 
 }
 ```
+
+## Install
+[How to istall](https://github.com/uurha/BetterPluginCollection/wiki/How-to-install)
