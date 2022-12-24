@@ -79,7 +79,10 @@ namespace Better.SceneManagement.Runtime
         /// <param name="options"></param>
         public static async Task LoadSceneAsync(SceneLoaderAsset asset, LoadSceneOptions options)
         {
-            await LoadSceneInternal(asset, options);
+            if (!options.UseIntermediate)
+                await LoadSceneInternal(asset, options);
+            else
+                await LoadSceneWithIntermediateInternal(asset, options);
         }
 
         /// <summary>
@@ -89,45 +92,10 @@ namespace Better.SceneManagement.Runtime
         /// <param name="options"></param>
         public static async void LoadScene(SceneLoaderAsset asset, LoadSceneOptions options)
         {
-            await LoadSceneInternal(asset, options);
-        }
-
-        /// <summary>
-        /// Loads scene async with intermediate scene from <see cref="SceneLoaderSettings"/> with default LoadSceneOptions
-        /// </summary>
-        /// <param name="asset"></param>
-        public static async Task LoadSceneWithIntermediateAsync(SceneLoaderAsset asset)
-        {
-            await LoadSceneWithIntermediateInternal(asset, new LoadSceneOptions());
-        }
-
-        /// <summary>
-        /// Loads scene async with intermediate scene from <see cref="SceneLoaderSettings"/> with LoadSceneOptions
-        /// </summary>
-        /// <param name="asset"></param>
-        /// <param name="options"></param>
-        public static async Task LoadSceneWithIntermediateAsync(SceneLoaderAsset asset, LoadSceneOptions options)
-        {
-            await LoadSceneWithIntermediateInternal(asset, options);
-        }
-        
-        /// <summary>
-        /// Loads scene async with intermediate scene from <see cref="SceneLoaderSettings"/> with default LoadSceneOptions
-        /// </summary>
-        /// <param name="asset"></param>
-        public static async void LoadSceneWithIntermediate(SceneLoaderAsset asset)
-        {
-            await LoadSceneWithIntermediateInternal(asset, new LoadSceneOptions());
-        }
-
-        /// <summary>
-        /// Loads scene async with intermediate scene from <see cref="SceneLoaderSettings"/> with LoadSceneOptions
-        /// </summary>
-        /// <param name="asset"></param>
-        /// <param name="options"></param>
-        public static async void LoadSceneWithIntermediate(SceneLoaderAsset asset, LoadSceneOptions options)
-        {
-            await LoadSceneWithIntermediateInternal(asset, options);
+            if (!options.UseIntermediate)
+                await LoadSceneInternal(asset, options);
+            else
+                await LoadSceneWithIntermediateInternal(asset, options);
         }
 
         private static async Task LoadSceneWithIntermediateInternal(SceneLoaderAsset asset, LoadSceneOptions options)
