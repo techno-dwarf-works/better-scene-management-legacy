@@ -1,11 +1,11 @@
 {
   "name": "com.uurha.betterscenemanagement",
   "displayName": "Better Scene Management",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "unity": "2018.3",
   "description": "Scene loader with ability to load and serialize SceneAssets",
   "dependencies": {
-    "com.uurha.betterextensions": "0.1.4"
+    "com.uurha.betterextensions": "0.1.5"
   },
   "author": {
     "name": "Arcueid D'athemon",
