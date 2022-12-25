@@ -1,7 +1,7 @@
 {
   "name": "com.uurha.betterscenemanagement",
   "displayName": "Better Scene Management",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "unity": "2018.3",
   "description": "Scene loader with ability to load and serialize SceneAssets",
   "dependencies": {
