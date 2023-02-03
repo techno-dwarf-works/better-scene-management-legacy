@@ -9,9 +9,9 @@ This plugin allows you to serialize scene asset in inspector for loaing via `Sce
 
 private async void Awake()
 {
-    await LoadSceneAsync(nextScene);
+    await SceneLoader.LoadSceneAsync(nextScene);
     //or
-    await LoadSceneAsync(asset, new LoadSceneOptions()
+    await SceneLoader.LoadSceneAsync(asset, new LoadSceneOptions()
         {
          SceneLoadMode = LoadSceneMode.Additive,
          UseIntermediate = false,
@@ -26,4 +26,4 @@ private static void ProgressChanged(float value)
 ```
 
 ## Install
-[How to istall](https://github.com/uurha/BetterPluginCollection/wiki/How-to-install)
+[How to install](https://github.com/uurha/BetterPluginCollection/wiki/How-to-install)
