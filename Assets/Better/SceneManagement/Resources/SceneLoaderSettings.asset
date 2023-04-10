@@ -12,7 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f3f5a3f70b704a4f84d6876399707c8f, type: 3}
   m_Name: SceneLoaderSettings
   m_EditorClassIdentifier: 
-  scenes: []
   intermediateScene:
     name: 
     fullPath: 
