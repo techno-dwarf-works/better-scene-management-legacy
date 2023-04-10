@@ -6,7 +6,7 @@ namespace Better.SceneManagement.EditorAddons
 {
     public static class SceneManagementMenuItems
     {
-        [MenuItem("Better/Scene Management/Highlight Scene Settings", false)]
+        [MenuItem(BetterInternalTools.MenuItemPrefix + "/Highlight Scene Settings", false)]
         private static void Highlight()
         {
             var settings = Resources.Load<SceneLoaderSettings>(nameof(SceneLoaderSettings));
@@ -14,20 +14,20 @@ namespace Better.SceneManagement.EditorAddons
                 Selection.SetActiveObjectWithContext(settings, settings);
         }
 
-        [MenuItem("Better/Scene Management/Highlight Scene Settings", true)]
+        [MenuItem(BetterInternalTools.MenuItemPrefix + "/Highlight Scene Settings", true)]
         private static bool HighlightValidate()
         {
             var settings = Resources.Load<SceneLoaderSettings>(nameof(SceneLoaderSettings));
             return settings != null;
         }
 
-        [MenuItem("Better/Scene Management/Create Scene Settings", false)]
+        [MenuItem(BetterInternalTools.MenuItemPrefix + "/Create Scene Settings", false)]
         private static void CreateNewSceneLoaderSettings()
         {
-            SceneSettingsValidator.LoadOrCreateSettings();
+            SceneSettingsValidator.ValidateSettings();
         }
 
-        [MenuItem("Better/Scene Management/Create Scene Settings", true)]
+        [MenuItem(BetterInternalTools.MenuItemPrefix + "/Create Scene Settings", true)]
         private static bool CreateNewSceneLoaderSettingsValidate()
         {
             var settings = Resources.Load<SceneLoaderSettings>(nameof(SceneLoaderSettings));
