@@ -91,9 +91,26 @@
         "com.unity.modules.imgui": "1.0.0"
       }
     },
-    "com.uurha.betterextensions": {
-      "version": "1.0.1",
+    "com.uurha.betterdatastructures": {
+      "version": "0.1.0",
+      "depth": 1,
+      "source": "registry",
+      "dependencies": {},
+      "url": "https://package.openupm.com"
+    },
+    "com.uurha.bettereditortools": {
+      "version": "0.9.0",
       "depth": 0,
+      "source": "registry",
+      "dependencies": {
+        "com.uurha.betterdatastructures": "0.1.0",
+        "com.uurha.betterextensions": "1.1.7"
+      },
+      "url": "https://package.openupm.com"
+    },
+    "com.uurha.betterextensions": {
+      "version": "1.1.7",
+      "depth": 1,
       "source": "registry",
       "dependencies": {},
       "url": "https://package.openupm.com"

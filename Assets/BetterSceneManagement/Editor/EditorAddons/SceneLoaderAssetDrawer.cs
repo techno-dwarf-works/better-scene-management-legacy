@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using Better.SceneManagement.Runtime;
+﻿using Better.SceneManagement.Runtime;
 using UnityEditor;
 using UnityEngine;
 
