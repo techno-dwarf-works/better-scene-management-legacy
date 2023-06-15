@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using Better.EditorTools.SettingsTools;
+using Better.SceneManagement.EditorAddons.Settings;
 using Better.SceneManagement.Runtime;
 using UnityEditor;
 using UnityEngine;
@@ -22,7 +23,7 @@ namespace Better.SceneManagement.EditorAddons
 
         private static bool Validate(out SceneLoaderSettings settings)
         {
-            settings = BetterInternalTools.LoadOrCreateScriptableObject<SceneLoaderSettings>();
+            settings = BetterSettingsToolsContainer<SceneSettingsTool>.Instance.LoadOrCreateScriptableObject();
             return settings != null;
         }
 
@@ -41,7 +42,8 @@ namespace Better.SceneManagement.EditorAddons
         public static void ValidateScenesSettings(SceneLoaderSettings settings)
         {
             var intermediate = settings.IntermediateScene;
-            SceneValidator.ValidateSceneInBuildSettings(intermediate);
+            if (intermediate.Validate())
+                SceneValidator.ValidateSceneInBuildSettings(intermediate);
         }
     }
 }

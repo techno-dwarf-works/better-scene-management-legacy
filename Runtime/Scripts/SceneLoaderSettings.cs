@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using Better.Tools.Runtime.Settings;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -8,7 +9,7 @@ namespace Better.SceneManagement.Runtime
     /// <summary>
     /// Scene Loader Settings
     /// </summary>
-    public class SceneLoaderSettings : ScriptableObject
+    public class SceneLoaderSettings : BetterSettings
     {
         [SerializeField] private SceneLoaderAsset intermediateScene = new SceneLoaderAsset();
 
@@ -16,7 +17,7 @@ namespace Better.SceneManagement.Runtime
         private int timeInIntermediateScene;
 
         public SceneLoaderAsset IntermediateScene => intermediateScene;
-        
+
         private const int Seconds = 1000;
 
         internal async Task LoadIntermediate(LoadSceneMode sceneLoadMode, SceneLoaderProgressChanged progressChanged)
