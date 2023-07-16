@@ -23,7 +23,7 @@ namespace Better.SceneManagement.EditorAddons
 
         private static bool Validate(out SceneLoaderSettings settings)
         {
-            settings = BetterSettingsToolsContainer<SceneSettingsTool>.Instance.LoadOrCreateScriptableObject();
+            settings = ProjectSettingsToolsContainer<SceneSettingsTool>.Instance.LoadOrCreateScriptableObject();
             return settings != null;
         }
 

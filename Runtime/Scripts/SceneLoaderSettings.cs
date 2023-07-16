@@ -9,7 +9,7 @@ namespace Better.SceneManagement.Runtime
     /// <summary>
     /// Scene Loader Settings
     /// </summary>
-    public class SceneLoaderSettings : BetterSettings
+    public class SceneLoaderSettings : ProjectSettings
     {
         [SerializeField] private SceneLoaderAsset intermediateScene = new SceneLoaderAsset();
 
@@ -18,21 +18,6 @@ namespace Better.SceneManagement.Runtime
 
         public SceneLoaderAsset IntermediateScene => intermediateScene;
 
-        private const int Seconds = 1000;
-
-        internal async Task LoadIntermediate(LoadSceneMode sceneLoadMode, SceneLoaderProgressChanged progressChanged)
-        {
-            await intermediateScene.SceneLoadOperation(sceneLoadMode, true, progressChanged);
-        }
-
-        internal async Task WaitForIntermediate()
-        {
-            await Task.Delay(timeInIntermediateScene * Seconds);
-        }
-
-        internal async Task UnloadIntermediate(UnloadSceneOptions unloadSceneOptions, bool autoSwitch)
-        {
-            await intermediateScene.SceneUnloadOperation(unloadSceneOptions, autoSwitch);
-        }
+        public int TimeInIntermediateScene => timeInIntermediateScene;
     }
 }

@@ -9,6 +9,8 @@ namespace Better.SceneManagement.Runtime
     /// </summary>
     public static class SceneLoaderExtensions
     {
+        private const int Seconds = 1000;
+
         /// <summary>
         /// Unloads scene by SceneLoaderAsset
         /// </summary>
@@ -62,6 +64,21 @@ namespace Better.SceneManagement.Runtime
             }
 
             return sceneOperation;
+        }
+
+        public static Task LoadIntermediate(this SceneLoaderSettings settings, LoadSceneMode sceneLoadMode, SceneLoaderProgressChanged progressChanged)
+        {
+            return settings.IntermediateScene.SceneLoadOperation(sceneLoadMode, true, progressChanged);
+        }
+
+        public static Task WaitForIntermediate(this SceneLoaderSettings settings)
+        {
+            return Task.Delay(settings.TimeInIntermediateScene * Seconds);
+        }
+
+        public static Task UnloadIntermediate(this SceneLoaderSettings settings, UnloadSceneOptions unloadSceneOptions, bool autoSwitch)
+        {
+            return settings.IntermediateScene.SceneUnloadOperation(unloadSceneOptions, autoSwitch);
         }
 
         public static bool Validate(this SceneLoaderAsset asset)
