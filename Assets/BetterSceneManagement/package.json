@@ -5,7 +5,7 @@
   "unity": "2020.3",
   "description": "Scene loader with ability to load and serialize SceneAssets",
   "dependencies": {
-    "com.uurha.bettereditortools": "1.0.5"
+    "com.uurha.bettereditortools": "1.0.53"
   },
   "author": {
     "name": "Arcueid D'athemon",
