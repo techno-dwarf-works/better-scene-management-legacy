@@ -1,8 +1,5 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
-using Better.Tools.Runtime.Settings;
+﻿using Better.Tools.Runtime.Settings;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 namespace Better.SceneManagement.Runtime
 {
