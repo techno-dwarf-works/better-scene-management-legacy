@@ -11,9 +11,14 @@ namespace Better.SceneManagement.EditorAddons
     {
         static SceneSettingsValidator()
         {
-            ValidateSettings();
+            EditorApplication.delayCall += DelayCall;
             EditorBuildSettings.sceneListChanged -= OnSceneListChanged;
             EditorBuildSettings.sceneListChanged += OnSceneListChanged;
+        }
+
+        private static void DelayCall()
+        {
+            ValidateSettings();
         }
 
         private static void OnSceneListChanged()
