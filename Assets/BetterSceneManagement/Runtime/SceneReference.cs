@@ -32,7 +32,7 @@ namespace Better.SceneManagement.Runtime
             guid = "1";
             name = Path.GetFileNameWithoutExtension(fullPath);
         }
-        
+
         public SceneReference()
         {
             fullPath = string.Empty;
@@ -43,6 +43,11 @@ namespace Better.SceneManagement.Runtime
         public bool Equals(SceneReference obj)
         {
             return name.CompareOrdinal(obj.name) && fullPath.CompareOrdinal(obj.fullPath);
+        }
+
+        public override string ToString()
+        {
+            return name;
         }
     }
 }

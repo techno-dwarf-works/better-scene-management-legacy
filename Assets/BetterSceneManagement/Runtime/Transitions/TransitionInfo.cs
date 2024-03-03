@@ -15,8 +15,8 @@ namespace Better.SceneManagement.Runtime.Transitions
             Mutable = true;
         }
 
-        public abstract Sequence.OperationData[] CollectFromOperations();
-        public abstract Sequence.OperationData[] CollectToOperations();
+        public abstract Sequence.OperationData[] CollectUnloadOperations();
+        public abstract Sequence.OperationData[] CollectLoadOperations();
 
         protected void MakeImmutable()
         {

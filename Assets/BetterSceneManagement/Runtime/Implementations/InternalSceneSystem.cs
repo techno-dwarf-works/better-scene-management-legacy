@@ -42,9 +42,9 @@ namespace Better.SceneManagement.Runtime
                 sequence = _settings.GetDefaultSequence();
             }
 
-            var fromOperations = transitionInfo.CollectFromOperations();
-            var toOperations = transitionInfo.CollectToOperations();
-            return sequence.Run(fromOperations, toOperations, mode);
+            var unloadOperations = transitionInfo.CollectUnloadOperations();
+            var loadOperations = transitionInfo.CollectLoadOperations();
+            return sequence.Run(unloadOperations, loadOperations, mode);
         }
     }
 }

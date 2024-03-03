@@ -34,12 +34,12 @@ namespace Better.SceneManagement.Runtime.Transitions
             return this;
         }
 
-        public override Sequence.OperationData[] CollectFromOperations()
+        public override Sequence.OperationData[] CollectUnloadOperations()
         {
             return Array.Empty<Sequence.OperationData>();
         }
 
-        public override Sequence.OperationData[] CollectToOperations()
+        public override Sequence.OperationData[] CollectLoadOperations()
         {
             return new[] { _operationData };
         }
