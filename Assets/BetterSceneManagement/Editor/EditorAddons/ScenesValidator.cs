@@ -19,7 +19,7 @@ namespace Better.SceneManagement.EditorAddons
 
         public static void ValidateSettings()
         {
-            SceneSystemSettings.Instance.Validate();
+            // SceneSystemSettings.Instance.Validate();
         }
 
         public static bool ValidateSceneInBuildSettings(SceneReference sceneReference)

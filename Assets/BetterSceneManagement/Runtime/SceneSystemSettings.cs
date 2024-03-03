@@ -3,15 +3,29 @@ using Better.Internal.Core.Runtime;
 using Better.ProjectSettings.Runtime;
 using Better.SceneManagement.Runtime.Sequences;
 using Better.Singletons.Runtime.Attributes;
+using UnityEngine;
 
 namespace Better.SceneManagement.Runtime
 {
     [ScriptableCreate(PrefixConstants.BetterPrefix + "/" + nameof(SceneManagement))]
     public class SceneSystemSettings : ScriptableSettings<SceneSystemSettings>
     {
+        [SerializeReference] private Sequence[] _sequences;
+        [SerializeReference] private Sequence _defaultSequence;
+
         public bool TryGetSequence(Type sequenceType, out Sequence sequence)
         {
-            throw new NotImplementedException();
+            for (var i = 0; i < _sequences.Length; i++)
+            {
+                sequence = _sequences[i];
+                if (sequence.GetType() == sequenceType)
+                {
+                    return true;
+                }
+            }
+
+            sequence = null;
+            return false;
         }
 
         public bool TryGetSequence<TSequence>(out TSequence sequence)
@@ -25,18 +39,13 @@ namespace Better.SceneManagement.Runtime
                 return true;
             }
 
-            sequence = default;
+            sequence = null;
             return false;
-        }
-        
-        public Sequence GetDefaultSequence()
-        {
-            throw new NotImplementedException();
         }
 
-        public bool Validate()
+        public Sequence GetDefaultSequence()
         {
-            return false;
+            return _defaultSequence;
         }
     }
 }

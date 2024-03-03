@@ -20,11 +20,11 @@ namespace Better.SceneManagement.Runtime
         {
             EditorApplication.delayCall -= DelayCall;
             if (!this.Validate()) return;
-            var sceneAssetPath = AssetDatabase.GUIDToAssetPath(guid);
+            var sceneAssetPath = AssetDatabase.GUIDToAssetPath(_guid);
             var sceneAsset = AssetDatabase.LoadAssetAtPath<SceneAsset>(sceneAssetPath);
-            if (!name.FastEquals(sceneAsset.name) || !fullPath.FastEquals(sceneAssetPath)) return;
-            name = sceneAsset.name;
-            fullPath = sceneAssetPath;
+            if (!_name.CompareOrdinal(sceneAsset.name) || !_fullPath.CompareOrdinal(sceneAssetPath)) return;
+            _name = sceneAsset.name;
+            _fullPath = sceneAssetPath;
         }
     }
 }
