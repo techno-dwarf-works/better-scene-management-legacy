@@ -1,7 +1,10 @@
 {
     "name": "BetterSceneManagement.Runtime",
-    "rootNamespace": "Better.SceneManagement",
+    "rootNamespace": "Better.SceneManagement.Runtime",
     "references": [
+        "GUID:01df13aca8d01e24a911bcc3e8277031",
+        "GUID:1862b35041b066d42ab4d3caf773657b",
+        "GUID:af7fffdf1d83bc842b0f6e3a01efda16",
         "GUID:28da8d3b12e3efa47928e0c9070f853d",
         "GUID:a59e3daedde9ca94bba45364d4ead25f"
     ],
