@@ -13,8 +13,7 @@ namespace Better.SceneManagement.Runtime.Sequences
 
         [Min(0f)]
         [SerializeField] private float _duration;
-
-
+        
         public override async Task Run(OperationData[] unloadOperations, OperationData[] loadOperations, LoadSceneMode mode)
         {
             var intermediateOperation = new OperationData(_intermediateScene);

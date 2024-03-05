@@ -42,7 +42,13 @@ namespace Better.SceneManagement.Runtime.Sequences
                 return;
             }
 
-            var operation = SceneManager.LoadSceneAsync(data.SceneReference.Name, mode);
+            var sceneName = data.SceneReference.Name;
+            if (!ValidateSceneLoaded(sceneName, false, false))
+            {
+                return;
+            }
+
+            var operation = SceneManager.LoadSceneAsync(sceneName, mode);
             operation.allowSceneActivation = true;
             await operation.AwaitCompletion(data.ProgressCallback);
         }
@@ -59,7 +65,14 @@ namespace Better.SceneManagement.Runtime.Sequences
                 return;
             }
 
-            var operation = SceneManager.UnloadSceneAsync(data.SceneReference.Name);
+            var sceneName = data.SceneReference.Name;
+            if (!ValidateSceneLoaded(sceneName, true, false)
+                || !ValidateSubScene(sceneName, true, false))
+            {
+                return;
+            }
+
+            var operation = SceneManager.UnloadSceneAsync(sceneName);
             await operation.AwaitCompletion(data.ProgressCallback);
         }
 
@@ -78,6 +91,37 @@ namespace Better.SceneManagement.Runtime.Sequences
             }
 
             return isValid;
+        }
+
+        private bool ValidateSceneLoaded(string sceneName, bool isLoaded, bool logException = true)
+        {
+            var scene = SceneManager.GetSceneByName(sceneName);
+            var isValid = scene.IsValid() && scene.isLoaded == isLoaded;
+            if (!isValid && logException)
+            {
+                var message = $"{nameof(scene)}({sceneName}) not valid ({nameof(isLoaded)}:{isLoaded})";
+                DebugUtility.LogException<InvalidOperationException>(message);
+            }
+
+            return isValid;
+        }
+
+        private bool ValidateSubScene(string sceneName, bool isSubScene, bool logException = true)
+        {
+            var scene = SceneManager.GetSceneByName(sceneName);
+            var isValid = scene.IsValid() && scene.isSubScene == isSubScene;
+            if (!isValid && logException)
+            {
+                var message = $"{nameof(scene)}({sceneName}) not valid ({nameof(isSubScene)}:{isSubScene})";
+                DebugUtility.LogException<InvalidOperationException>(message);
+            }
+
+            return isValid;
+        }
+
+        public override string ToString()
+        {
+            return GetType().Name;
         }
     }
 }

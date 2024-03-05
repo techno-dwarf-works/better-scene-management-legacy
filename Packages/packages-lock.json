@@ -108,6 +108,16 @@
         "com.unity.modules.imgui": "1.0.0"
       }
     },
+    "com.uurha.betterattributes": {
+      "version": "3.0.11",
+      "depth": 0,
+      "source": "registry",
+      "dependencies": {
+        "com.uurha.bettereditortools": "1.5.23",
+        "com.tdw.better.internal.core": "0.0.2"
+      },
+      "url": "https://package.openupm.com"
+    },
     "com.uurha.betterdatastructures": {
       "version": "0.1.7",
       "depth": 1,
@@ -118,19 +128,19 @@
       "url": "https://package.openupm.com"
     },
     "com.uurha.bettereditortools": {
-      "version": "1.5.21",
-      "depth": 0,
+      "version": "1.5.23",
+      "depth": 1,
       "source": "registry",
       "dependencies": {
         "com.uurha.betterdatastructures": "0.1.7",
-        "com.uurha.betterextensions": "1.5.92",
+        "com.uurha.betterextensions": "1.5.94",
         "com.tdw.better.internal.core": "0.0.2"
       },
       "url": "https://package.openupm.com"
     },
     "com.uurha.betterextensions": {
-      "version": "1.5.92",
-      "depth": 1,
+      "version": "1.5.94",
+      "depth": 2,
       "source": "registry",
       "dependencies": {
         "com.tdw.better.internal.core": "0.0.2"

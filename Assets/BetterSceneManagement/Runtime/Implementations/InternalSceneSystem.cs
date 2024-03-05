@@ -1,6 +1,7 @@
 using System.Threading.Tasks;
 using Better.SceneManagement.Runtime.Interfaces;
 using Better.SceneManagement.Runtime.Transitions;
+using UnityEngine;
 using UnityEngine.SceneManagement;
 
 namespace Better.SceneManagement.Runtime
@@ -37,7 +38,7 @@ namespace Better.SceneManagement.Runtime
         private Task RunAsync(TransitionInfo transitionInfo, LoadSceneMode mode)
         {
             if (!transitionInfo.SequenceOverriden
-                || !_settings.TryGetSequence(transitionInfo.SequenceType, out var sequence))
+                || !_settings.TryGetOverridenSequence(transitionInfo.SequenceType, out var sequence))
             {
                 sequence = _settings.GetDefaultSequence();
             }

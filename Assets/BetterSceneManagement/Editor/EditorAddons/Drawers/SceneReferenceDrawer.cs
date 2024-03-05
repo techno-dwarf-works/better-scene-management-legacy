@@ -1,50 +1,89 @@
-﻿using System.Reflection;
-using Better.EditorTools.EditorAddons.Attributes;
-using Better.EditorTools.EditorAddons.Drawers.Base;
-using Better.EditorTools.Runtime.Attributes;
+﻿using Better.SceneManagement.EditorAddons.Extensions;
 using Better.SceneManagement.Runtime;
 using UnityEditor;
 using UnityEngine;
 
 namespace Better.SceneManagement.EditorAddons.Drawers
 {
-    [MultiCustomPropertyDrawer(typeof(SceneReference))]
-    public class SceneReferenceDrawer : MultiFieldDrawer<SceneReferenceUtilityWrapper>
+    [CustomPropertyDrawer(typeof(SceneReference))]
+    public class SceneLoaderAssetDrawer : PropertyDrawer
     {
-        public SceneReferenceDrawer(FieldInfo fieldInfo, MultiPropertyAttribute attribute) : base(fieldInfo, attribute)
+        private const string NamePropertyPath = "name";
+        private const string FullPathPropertyPath = "fullPath";
+        private const string GUIDPropertyPath = "guid";
+
+        // Draw the property inside the given rect
+        public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
         {
+            // Using BeginProperty / EndProperty on the parent property means that
+            // prefab override logic works on the entire property.
+            if (!property.type.Equals(nameof(SceneReference)))
+            {
+                EditorGUILayout.LabelField($"{property.type} is not supported");
+            }
+
+            var fullPath = property.FindPropertyRelative(FullPathPropertyPath);
+            if (fullPath.propertyType == SerializedPropertyType.String)
+            {
+                SceneAsset currentScene;
+                var guidPathProperty = property.FindPropertyRelative(GUIDPropertyPath);
+                if (ValidateSceneGUID(guidPathProperty.stringValue, fullPath.stringValue, out var resolvedScene))
+                {
+                    currentScene = resolvedScene;
+                    UpdateProperty(property, currentScene.ToSceneReference());
+                }
+                else
+                {
+                    currentScene = AssetDatabase.LoadAssetAtPath<SceneAsset>(fullPath.stringValue);
+                }
+
+                var newScene =
+                    EditorGUI.ObjectField(position, label, currentScene, typeof(SceneAsset), false) as SceneAsset;
+
+                if (currentScene == newScene) return;
+                var loaderAsset = newScene.ToSceneReference();
+
+                UpdateProperty(property, loaderAsset);
+
+                property.serializedObject.ApplyModifiedProperties();
+                ScenesValidator.ValidateSceneInBuildSettings(loaderAsset);
+            }
+            else
+            {
+                EditorGUILayout.LabelField($"{property.type} is not supported");
+            }
         }
 
-        protected override bool PreDraw(ref Rect position, SerializedProperty property, GUIContent label)
+        private static bool ValidateSceneGUID(string guid, string fullPath,
+            out SceneAsset sceneLoaderAsset)
         {
-            _wrappers ??= GenerateCollection();
-            return true;
+            if (!string.IsNullOrEmpty(guid))
+            {
+                var path = AssetDatabase.GUIDToAssetPath(guid);
+                if (!fullPath.Equals(path))
+                {
+                    sceneLoaderAsset = AssetDatabase.LoadAssetAtPath<SceneAsset>(path);
+                    if (sceneLoaderAsset != null)
+                    {
+                        return true;
+                    }
+                }
+            }
+
+            sceneLoaderAsset = null;
+            return false;
         }
 
-        protected override Rect PreparePropertyRect(Rect original)
+        private static void UpdateProperty(SerializedProperty property, SceneReference sceneReference)
         {
-            return original;
-        }
+            var guidPathProperty = property.FindPropertyRelative(GUIDPropertyPath);
+            guidPathProperty.stringValue = sceneReference.Guid;
 
-        protected override void PostDraw(Rect position, SerializedProperty property, GUIContent label)
-        {
-        }
+            var fullPathProperty = property.FindPropertyRelative(FullPathPropertyPath);
+            fullPathProperty.stringValue = sceneReference.FullPath;
 
-        protected override WrapperCollection<SceneReferenceUtilityWrapper> GenerateCollection()
-        {
-            return new();
-        }
-
-        protected override void DrawField(Rect position, SerializedProperty property, GUIContent label)
-        {
-            var wrapper = GetWrapper(property);
-            wrapper.DrawField(position, property, label);
-        }
-
-        private SceneReferenceUtilityWrapper GetWrapper(SerializedProperty property)
-        {
-            var cache = ValidateCachedProperties(property, SceneReferenceUtility.Instance);
-            return cache.Value.Wrapper;
+            var nameProperty = property.FindPropertyRelative(NamePropertyPath);
+            nameProperty.stringValue = sceneReference.Name;
         }
     }
 }

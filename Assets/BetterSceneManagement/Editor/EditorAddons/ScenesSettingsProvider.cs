@@ -7,16 +7,14 @@ namespace Better.SceneManagement.EditorAddons
 {
     internal class ScenesSettingsProvider : DefaultProjectSettingsProvider<SceneSystemSettings>
     {
-        public const string Path = PrefixConstants.BetterPrefix + "/" + nameof(SceneManagement);
-
-        public ScenesSettingsProvider() : base(Path)
+        public ScenesSettingsProvider() : base(SceneSystemSettings.Path)
         {
         }
 
-        [MenuItem(Path + PrefixConstants.HighlightPrefix, false, 999)]
+        [MenuItem(SceneSystemSettings.Path + "/" + PrefixConstants.HighlightPrefix, false, 999)]
         private static void Highlight()
         {
-            SettingsService.OpenProjectSettings(ProjectPath + Path);
+            SettingsService.OpenProjectSettings(ProjectPath + SceneSystemSettings.Path);
         }
     }
 }
