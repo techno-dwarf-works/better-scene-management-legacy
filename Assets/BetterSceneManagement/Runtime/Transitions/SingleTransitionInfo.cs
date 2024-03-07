@@ -15,6 +15,12 @@ namespace Better.SceneManagement.Runtime.Transitions
         {
             _runner = runner;
             _operationData = new(sceneReference);
+
+            if (sceneReference == null)
+            {
+                DebugUtility.LogException<ArgumentNullException>(nameof(sceneReference));
+                MakeImmutable();
+            }
         }
 
         public SingleTransitionInfo Sequence<TSequence>()
@@ -26,7 +32,7 @@ namespace Better.SceneManagement.Runtime.Transitions
 
         public SingleTransitionInfo OnProgress(EventHandler<float> callback)
         {
-            if (ValidateMutable())
+            if (ValidateMutable() && callback != null)
             {
                 _operationData.ProgressCallback.ProgressChanged += callback;
             }

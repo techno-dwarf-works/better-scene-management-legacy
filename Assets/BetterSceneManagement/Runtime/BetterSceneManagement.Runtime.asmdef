@@ -8,7 +8,9 @@
         "GUID:28da8d3b12e3efa47928e0c9070f853d",
         "GUID:a59e3daedde9ca94bba45364d4ead25f",
         "GUID:35101f455c979e94c9a0a4793484b7fd",
-        "GUID:443314a5a4e67c14a88ae223776b6554"
+        "GUID:443314a5a4e67c14a88ae223776b6554",
+        "GUID:1c5574afb40e5fe4ca9e9c156009297b",
+        "GUID:d103b3c6d6cb0564d8d6543e9d797878"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
@@ -17,6 +19,22 @@
     "precompiledReferences": [],
     "autoReferenced": true,
     "defineConstraints": [],
-    "versionDefines": [],
+    "versionDefines": [
+        {
+            "name": "com.tdw.better.singletons",
+            "expression": "0.0.7",
+            "define": "BETTER_SINGLETONS"
+        },
+        {
+            "name": "com.tdw.better.services",
+            "expression": "0.0.4",
+            "define": "BETTER_SERVICES"
+        },
+        {
+            "name": "com.tdw.better.locator",
+            "expression": "0.0.7",
+            "define": "BETTER_LOCATOR"
+        }
+    ],
     "noEngineReferences": false
 }

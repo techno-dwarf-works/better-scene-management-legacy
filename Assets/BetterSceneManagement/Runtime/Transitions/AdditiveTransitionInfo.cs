@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Better.Extensions.Runtime;
 using Better.SceneManagement.Runtime.Interfaces;
 using Better.SceneManagement.Runtime.Sequences;
+using UnitySceneManager = UnityEngine.SceneManagement.SceneManager;
 
 namespace Better.SceneManagement.Runtime.Transitions
 {
@@ -32,6 +33,12 @@ namespace Better.SceneManagement.Runtime.Transitions
 
         public AdditiveTransitionInfo LoadScene(SceneReference sceneReference)
         {
+            if (sceneReference == null)
+            {
+                DebugUtility.LogException<ArgumentNullException>(nameof(sceneReference));
+                return this;
+            }
+
             if (!ValidateMutable())
             {
                 return this;
@@ -46,8 +53,24 @@ namespace Better.SceneManagement.Runtime.Transitions
             return this;
         }
 
+        public AdditiveTransitionInfo LoadScenes(IEnumerable<SceneReference> sceneReferences)
+        {
+            foreach (var sceneReference in sceneReferences)
+            {
+                LoadScene(sceneReference);
+            }
+
+            return this;
+        }
+
         public AdditiveTransitionInfo UnloadScene(SceneReference sceneReference)
         {
+            if (sceneReference == null)
+            {
+                DebugUtility.LogException<ArgumentNullException>(nameof(sceneReference));
+                return this;
+            }
+
             if (!ValidateMutable())
             {
                 return this;
@@ -62,9 +85,44 @@ namespace Better.SceneManagement.Runtime.Transitions
             return this;
         }
 
+        public AdditiveTransitionInfo UnloadScenes(IEnumerable<SceneReference> sceneReferences)
+        {
+            foreach (var sceneReference in sceneReferences)
+            {
+                UnloadScene(sceneReference);
+            }
+
+            return this;
+        }
+
+        public AdditiveTransitionInfo UnloadAllScenes()
+        {
+            var sceneCount = UnitySceneManager.sceneCount;
+            for (int i = 0; i < sceneCount; i++)
+            {
+                var scene = UnitySceneManager.GetSceneAt(i);
+                if (scene.IsValid() && scene.isLoaded && scene.isSubScene)
+                {
+                    var sceneReference = new SceneReference(scene);
+                    if (!IsMappedKey(sceneReference))
+                    {
+                        UnloadScene(sceneReference);
+                    }
+                }
+            }
+
+            return this;
+        }
+
         public AdditiveTransitionInfo OnProgress(SceneReference sceneReference, EventHandler<float> callback)
         {
-            if (!ValidateMutable())
+            if (sceneReference == null)
+            {
+                DebugUtility.LogException<ArgumentNullException>(nameof(sceneReference));
+                return this;
+            }
+
+            if (!ValidateMutable() || callback == null)
             {
                 return this;
             }
@@ -108,9 +166,14 @@ namespace Better.SceneManagement.Runtime.Transitions
             RunAsync().Forget();
         }
 
+        private bool IsMappedKey(SceneReference value)
+        {
+            return _sceneOperationMap.ContainsKey(value);
+        }
+
         private bool TryMappingOperation(Sequence.OperationData value, bool logException = true)
         {
-            if (_sceneOperationMap.ContainsKey(value.SceneReference))
+            if (IsMappedKey(value.SceneReference))
             {
                 if (logException)
                 {

@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Better.Extensions.Runtime;
 using UnityEngine.SceneManagement;
+using UnitySceneManager = UnityEngine.SceneManagement.SceneManager;
 
 namespace Better.SceneManagement.Runtime.Sequences
 {
@@ -22,7 +23,7 @@ namespace Better.SceneManagement.Runtime.Sequences
 
             public bool Validate(bool logException = true)
             {
-                var isValid = SceneReference.Validate();
+                var isValid = SceneReference != null && SceneReference.Validate();
                 if (!isValid && logException)
                 {
                     var message = $"{nameof(SceneReference)} is invalid";
@@ -48,7 +49,7 @@ namespace Better.SceneManagement.Runtime.Sequences
                 return;
             }
 
-            var operation = SceneManager.LoadSceneAsync(sceneName, mode);
+            var operation = UnityEngine.SceneManagement.SceneManager.LoadSceneAsync(sceneName, mode);
             operation.allowSceneActivation = true;
             await operation.AwaitCompletion(data.ProgressCallback);
         }
@@ -72,7 +73,7 @@ namespace Better.SceneManagement.Runtime.Sequences
                 return;
             }
 
-            var operation = SceneManager.UnloadSceneAsync(sceneName);
+            var operation = UnitySceneManager.UnloadSceneAsync(sceneName);
             await operation.AwaitCompletion(data.ProgressCallback);
         }
 
@@ -95,7 +96,7 @@ namespace Better.SceneManagement.Runtime.Sequences
 
         private bool ValidateSceneLoaded(string sceneName, bool isLoaded, bool logException = true)
         {
-            var scene = SceneManager.GetSceneByName(sceneName);
+            var scene = UnitySceneManager.GetSceneByName(sceneName);
             var isValid = scene.IsValid() && scene.isLoaded == isLoaded;
             if (!isValid && logException)
             {
@@ -108,7 +109,7 @@ namespace Better.SceneManagement.Runtime.Sequences
 
         private bool ValidateSubScene(string sceneName, bool isSubScene, bool logException = true)
         {
-            var scene = SceneManager.GetSceneByName(sceneName);
+            var scene = UnitySceneManager.GetSceneByName(sceneName);
             var isValid = scene.IsValid() && scene.isSubScene == isSubScene;
             if (!isValid && logException)
             {

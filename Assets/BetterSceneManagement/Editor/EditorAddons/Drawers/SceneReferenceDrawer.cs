@@ -6,11 +6,11 @@ using UnityEngine;
 namespace Better.SceneManagement.EditorAddons.Drawers
 {
     [CustomPropertyDrawer(typeof(SceneReference))]
-    public class SceneLoaderAssetDrawer : PropertyDrawer
+    public class SceneReferenceDrawer : PropertyDrawer
     {
-        private const string NamePropertyPath = "name";
-        private const string FullPathPropertyPath = "fullPath";
-        private const string GUIDPropertyPath = "guid";
+        private const string NamePropertyPath = "_name";
+        private const string FullPathPropertyPath = "_fullPath";
+        private const string GUIDPropertyPath = "_guid";
 
         // Draw the property inside the given rect
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
@@ -36,9 +36,8 @@ namespace Better.SceneManagement.EditorAddons.Drawers
                 {
                     currentScene = AssetDatabase.LoadAssetAtPath<SceneAsset>(fullPath.stringValue);
                 }
-
-                var newScene =
-                    EditorGUI.ObjectField(position, label, currentScene, typeof(SceneAsset), false) as SceneAsset;
+                
+                var newScene = EditorGUI.ObjectField(position, label, currentScene, typeof(SceneAsset), false) as SceneAsset;
 
                 if (currentScene == newScene) return;
                 var loaderAsset = newScene.ToSceneReference();

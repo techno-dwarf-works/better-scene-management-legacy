@@ -1,12 +1,11 @@
 using System.Threading.Tasks;
 using Better.SceneManagement.Runtime.Interfaces;
 using Better.SceneManagement.Runtime.Transitions;
-using UnityEngine;
 using UnityEngine.SceneManagement;
 
 namespace Better.SceneManagement.Runtime
 {
-    public class InternalSceneSystem : ISystem
+    public class InternalSceneSystem : ISceneSystem, ITransitionRunner<SingleTransitionInfo>, ITransitionRunner<AdditiveTransitionInfo>
     {
         private readonly SceneSystemSettings _settings;
 
