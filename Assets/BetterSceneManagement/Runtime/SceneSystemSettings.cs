@@ -14,11 +14,17 @@ namespace Better.SceneManagement.Runtime
         public const string Path = PrefixConstants.BetterPrefix + "/Scene Management";
         private readonly Sequence _fallbackSequence = new ParallelSequence();
 
+        [Header("SEQUENCES")]
         [Select]
         [SerializeReference] private Sequence _defaultSequence;
 
         [Select]
         [SerializeReference] private Sequence[] _overridenSequences;
+
+        [Header("MISC")]
+        [SerializeField] private bool _allowLogs = true;
+
+        public bool AllowLogs => _allowLogs;
 
         public bool TryGetOverridenSequence(Type sequenceType, out Sequence sequence)
         {

@@ -7,12 +7,14 @@ namespace Better.SceneManagement.Runtime.Transitions
     public abstract class TransitionInfo : IDisposable
     {
         protected bool Mutable { get; private set; }
-        public bool SequenceOverriden { get; protected set; }
-        public Type SequenceType { get; protected set; }
+        public bool OverridenSequence { get; private set; }
+        public Type SequenceType { get; private set; }
+        public bool AllowLogs { get; private set; }
 
-        protected TransitionInfo()
+        protected TransitionInfo(bool allowLogs)
         {
             Mutable = true;
+            AllowLogs = allowLogs;
         }
 
         public abstract Sequence.OperationData[] CollectUnloadOperations();
@@ -31,8 +33,18 @@ namespace Better.SceneManagement.Runtime.Transitions
                 return;
             }
 
-            SequenceOverriden = true;
+            OverridenSequence = true;
             SequenceType = typeof(TSequence);
+        }
+
+        protected void OverrideAllowingLogs(bool value)
+        {
+            if (!ValidateMutable())
+            {
+                return;
+            }
+
+            AllowLogs = value;
         }
 
         protected bool ValidateMutable(bool logException = true)

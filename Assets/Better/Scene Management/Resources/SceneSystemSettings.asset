@@ -13,10 +13,17 @@ MonoBehaviour:
   m_Name: SceneSystemSettings
   m_EditorClassIdentifier: 
   _defaultSequence:
-    rid: 1549784852741750789
+    rid: 1549784918878060547
   _overridenSequences: []
+  _allowLogs: 1
   references:
     version: 2
     RefIds:
-    - rid: 1549784852741750789
-      type: {class: ParallelSequence, ns: Better.SceneManagement.Runtime.Sequences, asm: BetterSceneManagement.Runtime}
+    - rid: 1549784918878060547
+      type: {class: IntermediateSequence, ns: Better.SceneManagement.Runtime.Sequences, asm: BetterSceneManagement.Runtime}
+      data:
+        _intermediateScene:
+          _name: Loading
+          _fullPath: Assets/Loading.unity
+          _guid: 34fe0da5518d60e419d8026a262e2273
+        _duration: 3

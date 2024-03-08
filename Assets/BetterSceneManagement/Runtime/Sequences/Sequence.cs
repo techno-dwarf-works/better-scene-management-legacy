@@ -34,9 +34,9 @@ namespace Better.SceneManagement.Runtime.Sequences
             }
         }
 
-        public abstract Task Run(OperationData[] unloadOperations, OperationData[] loadOperations, LoadSceneMode mode);
+        public abstract Task Run(OperationData[] unloadOperations, OperationData[] loadOperations, LoadSceneMode mode, bool logs);
 
-        protected async Task Load(OperationData data, LoadSceneMode mode)
+        protected async Task Load(OperationData data, LoadSceneMode mode, bool logs)
         {
             if (!data.Validate())
             {
@@ -44,7 +44,7 @@ namespace Better.SceneManagement.Runtime.Sequences
             }
 
             var sceneName = data.SceneReference.Name;
-            if (!ValidateSceneLoaded(sceneName, false, false))
+            if (!ValidateSceneLoaded(sceneName, false, logs))
             {
                 return;
             }
@@ -54,12 +54,12 @@ namespace Better.SceneManagement.Runtime.Sequences
             await operation.AwaitCompletion(data.ProgressCallback);
         }
 
-        protected Task Load(OperationData[] data, LoadSceneMode mode)
+        protected Task Load(OperationData[] data, LoadSceneMode mode, bool logs)
         {
-            return data.Select(d => Load(d, mode)).WhenAll();
+            return data.Select(element => Load(element, mode, logs)).WhenAll();
         }
 
-        protected async Task Unload(OperationData data)
+        protected async Task Unload(OperationData data, bool logs)
         {
             if (!data.Validate())
             {
@@ -67,8 +67,8 @@ namespace Better.SceneManagement.Runtime.Sequences
             }
 
             var sceneName = data.SceneReference.Name;
-            if (!ValidateSceneLoaded(sceneName, true, false)
-                || !ValidateSubScene(sceneName, true, false))
+            if (!ValidateSceneLoaded(sceneName, true, logs)
+                || !ValidateSubScene(sceneName, true, logs))
             {
                 return;
             }
@@ -77,12 +77,12 @@ namespace Better.SceneManagement.Runtime.Sequences
             await operation.AwaitCompletion(data.ProgressCallback);
         }
 
-        protected Task Unload(OperationData[] data)
+        protected Task Unload(OperationData[] data, bool logs)
         {
-            return data.Select(Unload).WhenAll();
+            return data.Select(element => Unload(element, logs)).WhenAll();
         }
 
-        protected bool ValidateSceneMode(LoadSceneMode value, LoadSceneMode validState, bool logException = true)
+        protected bool ValidateSceneMode(LoadSceneMode value, LoadSceneMode validState, bool logException)
         {
             var isValid = value == validState;
             if (!isValid && logException)
@@ -94,26 +94,29 @@ namespace Better.SceneManagement.Runtime.Sequences
             return isValid;
         }
 
-        private bool ValidateSceneLoaded(string sceneName, bool isLoaded, bool logException = true)
+        protected bool ValidateSceneLoaded(string sceneName, bool isLoaded, bool logException)
         {
             var scene = UnitySceneManager.GetSceneByName(sceneName);
-            var isValid = scene.IsValid() && scene.isLoaded == isLoaded;
+            var isValid = isLoaded == (scene.IsValid() && scene.isLoaded);
             if (!isValid && logException)
             {
-                var message = $"{nameof(scene)}({sceneName}) not valid ({nameof(isLoaded)}:{isLoaded})";
+                var reason = isLoaded ? "not loaded" : "already loaded";
+                var message = $"{nameof(scene)}({sceneName}) not valid, {reason}";
                 DebugUtility.LogException<InvalidOperationException>(message);
             }
 
             return isValid;
         }
 
-        private bool ValidateSubScene(string sceneName, bool isSubScene, bool logException = true)
+        protected bool ValidateSubScene(string sceneName, bool isSubScene, bool logException)
         {
-            var scene = UnitySceneManager.GetSceneByName(sceneName);
-            var isValid = scene.IsValid() && scene.isSubScene == isSubScene;
+            var activeScene = UnitySceneManager.GetActiveScene();
+            var isActive = activeScene.IsValid() && activeScene.name == sceneName;
+            var isValid = isActive != isSubScene;
             if (!isValid && logException)
             {
-                var message = $"{nameof(scene)}({sceneName}) not valid ({nameof(isSubScene)}:{isSubScene})";
+                var reason = isSubScene ? "not subScene" : "is activeScene";
+                var message = $"{sceneName} not valid, {reason}";
                 DebugUtility.LogException<InvalidOperationException>(message);
             }
 

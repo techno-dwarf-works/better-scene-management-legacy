@@ -11,7 +11,8 @@ namespace Better.SceneManagement.Runtime.Transitions
         private readonly ITransitionRunner<SingleTransitionInfo> _runner;
         private readonly Sequence.OperationData _operationData;
 
-        public SingleTransitionInfo(ITransitionRunner<SingleTransitionInfo> runner, SceneReference sceneReference) : base()
+        public SingleTransitionInfo(ITransitionRunner<SingleTransitionInfo> runner, SceneReference sceneReference, bool allowLogs)
+            : base(allowLogs)
         {
             _runner = runner;
             _operationData = new(sceneReference);
@@ -27,6 +28,12 @@ namespace Better.SceneManagement.Runtime.Transitions
             where TSequence : Sequence
         {
             OverrideSequence<TSequence>();
+            return this;
+        }
+
+        public SingleTransitionInfo SuppressLogs()
+        {
+            OverrideAllowingLogs(false);
             return this;
         }
 

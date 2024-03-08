@@ -16,18 +16,25 @@ namespace Better.SceneManagement.Runtime.Transitions
         private readonly HashSet<Sequence.OperationData> _unloadOperations;
         private readonly Dictionary<SceneReference, Sequence.OperationData> _sceneOperationMap;
 
-        public AdditiveTransitionInfo(ITransitionRunner<AdditiveTransitionInfo> runner) : base()
+        public AdditiveTransitionInfo(ITransitionRunner<AdditiveTransitionInfo> runner, bool allowLogs)
+            : base(allowLogs)
         {
             _runner = runner;
             _loadOperations = new();
             _unloadOperations = new();
-            _sceneOperationMap = new();
+            _sceneOperationMap = new(SceneReferenceComparer.Comparer);
         }
 
         public AdditiveTransitionInfo Sequence<TSequence>()
             where TSequence : Sequence
         {
             OverrideSequence<TSequence>();
+            return this;
+        }
+
+        public AdditiveTransitionInfo SuppressLogs()
+        {
+            OverrideAllowingLogs(false);
             return this;
         }
 
@@ -55,6 +62,17 @@ namespace Better.SceneManagement.Runtime.Transitions
 
         public AdditiveTransitionInfo LoadScenes(IEnumerable<SceneReference> sceneReferences)
         {
+            if (sceneReferences == null)
+            {
+                DebugUtility.LogException<ArgumentNullException>(nameof(sceneReferences));
+                return this;
+            }
+
+            if (!ValidateMutable())
+            {
+                return this;
+            }
+
             foreach (var sceneReference in sceneReferences)
             {
                 LoadScene(sceneReference);
@@ -87,6 +105,17 @@ namespace Better.SceneManagement.Runtime.Transitions
 
         public AdditiveTransitionInfo UnloadScenes(IEnumerable<SceneReference> sceneReferences)
         {
+            if (sceneReferences == null)
+            {
+                DebugUtility.LogException<ArgumentNullException>(nameof(sceneReferences));
+                return this;
+            }
+
+            if (!ValidateMutable())
+            {
+                return this;
+            }
+
             foreach (var sceneReference in sceneReferences)
             {
                 UnloadScene(sceneReference);
@@ -97,11 +126,17 @@ namespace Better.SceneManagement.Runtime.Transitions
 
         public AdditiveTransitionInfo UnloadAllScenes()
         {
+            if (!ValidateMutable())
+            {
+                return this;
+            }
+
+            var activeScene = UnitySceneManager.GetActiveScene();
             var sceneCount = UnitySceneManager.sceneCount;
             for (int i = 0; i < sceneCount; i++)
             {
                 var scene = UnitySceneManager.GetSceneAt(i);
-                if (scene.IsValid() && scene.isLoaded && scene.isSubScene)
+                if (scene.IsValid() && scene.isLoaded && scene != activeScene)
                 {
                     var sceneReference = new SceneReference(scene);
                     if (!IsMappedKey(sceneReference))

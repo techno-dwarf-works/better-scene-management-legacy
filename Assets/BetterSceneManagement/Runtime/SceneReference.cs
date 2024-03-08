@@ -27,7 +27,7 @@ namespace Better.SceneManagement.Runtime
         public SceneReference(Scene scene)
         {
             _fullPath = scene.path;
-            _guid = "1";
+            _guid = nameof(Guid);
             _name = Path.GetFileNameWithoutExtension(_fullPath);
         }
 
@@ -41,11 +41,6 @@ namespace Better.SceneManagement.Runtime
         public bool Validate()
         {
             return !_fullPath.IsNullOrEmpty() && !_name.IsNullOrEmpty() && !_guid.IsNullOrEmpty();
-        }
-
-        public bool Equals(SceneReference obj)
-        {
-            return _name.CompareOrdinal(obj._name) && _fullPath.CompareOrdinal(obj._fullPath);
         }
 
         public override string ToString()
