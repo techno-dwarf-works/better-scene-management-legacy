@@ -5,9 +5,9 @@ using UnityEditor;
 
 namespace Better.SceneManagement.EditorAddons
 {
-    internal class ScenesSettingsProvider : DefaultProjectSettingsProvider<SceneSystemSettings>
+    internal class SceneSystemSettingsProvider : DefaultProjectSettingsProvider<SceneSystemSettings>
     {
-        public ScenesSettingsProvider() : base(SceneSystemSettings.Path)
+        public SceneSystemSettingsProvider() : base(SceneSystemSettings.Path)
         {
         }
 

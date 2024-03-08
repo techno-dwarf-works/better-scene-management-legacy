@@ -19,10 +19,18 @@ namespace Better.SceneManagement.Runtime
         private void DelayCall()
         {
             EditorApplication.delayCall -= DelayCall;
-            if (!this.Validate()) return;
+            if (!Validate())
+            {
+                return;
+            }
+
             var sceneAssetPath = AssetDatabase.GUIDToAssetPath(_guid);
             var sceneAsset = AssetDatabase.LoadAssetAtPath<SceneAsset>(sceneAssetPath);
-            if (!_name.CompareOrdinal(sceneAsset.name) || !_fullPath.CompareOrdinal(sceneAssetPath)) return;
+            if (!_name.CompareOrdinal(sceneAsset.name) || !_fullPath.CompareOrdinal(sceneAssetPath))
+            {
+                return;
+            }
+
             _name = sceneAsset.name;
             _fullPath = sceneAssetPath;
         }

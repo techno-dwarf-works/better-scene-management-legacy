@@ -4,25 +4,11 @@ using Better.SceneManagement.Runtime;
 using UnityEditor;
 using UnityEngine;
 
-namespace Better.SceneManagement.EditorAddons
+namespace Better.SceneManagement.EditorAddons.Utility
 {
-    [InitializeOnLoad]
-    public static class ScenesValidator
+    public static class BuildSettingsUtility
     {
-        static ScenesValidator()
-        {
-            EditorApplication.delayCall -= OnEditorApplicationCall;
-            EditorApplication.delayCall += OnEditorApplicationCall;
-            EditorBuildSettings.sceneListChanged -= OnSceneListChanged;
-            EditorBuildSettings.sceneListChanged += OnSceneListChanged;
-        }
-
-        public static void ValidateSettings()
-        {
-            // SceneSystemSettings.Instance.Validate();
-        }
-
-        public static bool ValidateSceneInBuildSettings(SceneReference sceneReference)
+        public static bool ValidateScene(SceneReference sceneReference)
         {
             if (sceneReference == null || !sceneReference.Validate())
             {
@@ -45,16 +31,6 @@ namespace Better.SceneManagement.EditorAddons
             }
 
             return true;
-        }
-
-        private static void OnEditorApplicationCall()
-        {
-            ValidateSettings();
-        }
-
-        private static void OnSceneListChanged()
-        {
-            ValidateSettings();
         }
     }
 }

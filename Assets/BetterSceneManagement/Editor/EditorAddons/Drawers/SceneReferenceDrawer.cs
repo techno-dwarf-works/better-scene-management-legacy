@@ -1,4 +1,5 @@
 ﻿using Better.SceneManagement.EditorAddons.Extensions;
+using Better.SceneManagement.EditorAddons.Utility;
 using Better.SceneManagement.Runtime;
 using UnityEditor;
 using UnityEngine;
@@ -45,7 +46,7 @@ namespace Better.SceneManagement.EditorAddons.Drawers
                 UpdateProperty(property, loaderAsset);
 
                 property.serializedObject.ApplyModifiedProperties();
-                ScenesValidator.ValidateSceneInBuildSettings(loaderAsset);
+                BuildSettingsUtility.ValidateScene(loaderAsset);
             }
             else
             {
