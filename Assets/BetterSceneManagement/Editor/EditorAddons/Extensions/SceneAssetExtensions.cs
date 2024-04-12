@@ -1,5 +1,5 @@
 ﻿using System;
-using Better.Extensions.Runtime;
+using Better.Commons.Runtime.Utility;
 using Better.SceneManagement.Runtime;
 using UnityEditor;
 

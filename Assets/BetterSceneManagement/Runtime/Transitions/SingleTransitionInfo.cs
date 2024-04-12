@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Better.Extensions.Runtime;
+using Better.Commons.Runtime.Extensions;
+using Better.Commons.Runtime.Utility;
 using Better.SceneManagement.Runtime.Interfaces;
 using Better.SceneManagement.Runtime.Sequences;
 

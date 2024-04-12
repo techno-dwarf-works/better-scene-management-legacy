@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Better.Extensions.Runtime;
+using Better.Commons.Runtime.Extensions;
 using UnityEngine.SceneManagement;
 
 namespace Better.SceneManagement.Runtime.Sequences

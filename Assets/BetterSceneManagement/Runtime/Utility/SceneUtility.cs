@@ -1,20 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Better.Extensions.Runtime;
+using Better.Commons.Runtime.Extensions;
 using Better.SceneManagement.Runtime.Interfaces;
 
 namespace Better.SceneManagement.Runtime.Utility
 {
     public static class SceneUtility
     {
-#if BETTER_SERVICES && BETTER_LOCATOR
-        private static readonly Locators.Runtime.ServiceProperty<SavesService> _serviceProperty = new();
+#if BETTER_SERVICES && BETTER_LOCATORS
+        private static readonly Locators.Runtime.ServiceProperty<SceneService> _serviceProperty = new();
 #endif
 
         public static ISceneSystem GetSystem()
         {
-#if BETTER_SERVICES && BETTER_LOCATOR
+#if BETTER_SERVICES && BETTER_LOCATORS
             if (_serviceProperty.IsRegistered)
             {
                 return _serviceProperty.CachedService;

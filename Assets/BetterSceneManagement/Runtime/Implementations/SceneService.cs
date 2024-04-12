@@ -7,7 +7,7 @@ using Better.Services.Runtime;
 
 namespace Better.SceneManagement.Runtime
 {
-    public class SavesService : PocoService, ISceneSystem
+    public class SceneService : PocoService, ISceneSystem
     {
         private ISceneSystem _internalSystem;
 
