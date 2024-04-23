@@ -1,11 +1,14 @@
 {
   "name": "com.uurha.betterscenemanagement",
   "displayName": "Better Scene Management",
-  "version": "0.2.54",
+  "version": "0.3.0",
   "unity": "2020.3",
   "description": "Scene loader with ability to load and serialize SceneAssets",
   "dependencies": {
-    "com.uurha.bettereditortools": "1.0.62"
+    "com.tdw.better.internal.core": "0.0.2",
+    "com.tdw.better.projectsettings": "0.0.2",
+    "com.tdw.better.commons": "0.0.2",
+    "com.uurha.betterattributes": "3.0.13"
   },
   "author": {
     "name": "Better Plugins",
@@ -16,8 +19,8 @@
   "license": "MIT",
   "licensesUrl":"https://github.com/techno-dwarf-works/better-scene-management/blob/main/LICENSE",
   "keywords": [
+    "scene",
     "scene management",
-    "extensions",
     "custom editor",
     "custom drawers"
   ],
