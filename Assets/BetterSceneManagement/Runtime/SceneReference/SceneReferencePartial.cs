@@ -25,6 +25,12 @@ namespace Better.SceneManagement.Runtime
             }
 
             var sceneAssetPath = AssetDatabase.GUIDToAssetPath(_guid);
+
+            if (sceneAssetPath.IsNullOrEmpty())
+            {
+                return;
+            }
+            
             var sceneAsset = AssetDatabase.LoadAssetAtPath<SceneAsset>(sceneAssetPath);
             if (!_name.CompareOrdinal(sceneAsset.name) || !_fullPath.CompareOrdinal(sceneAssetPath))
             {
