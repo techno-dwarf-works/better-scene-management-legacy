@@ -1,14 +1,14 @@
 {
   "name": "com.uurha.betterscenemanagement",
   "displayName": "Better Scene Management",
-  "version": "0.3.2",
+  "version": "0.3.3",
   "unity": "2020.3",
   "description": "Scene loader with ability to load and serialize SceneAssets",
   "dependencies": {
     "com.tdw.better.internal.core": "0.0.2",
-    "com.tdw.better.projectsettings": "0.1.1",
-    "com.tdw.better.commons": "0.0.5",
-    "com.uurha.betterattributes": "3.1.3"
+    "com.tdw.better.projectsettings": "0.1.3",
+    "com.tdw.better.commons": "0.0.22",
+    "com.uurha.betterattributes": "3.1.5"
   },
   "author": {
     "name": "Better Plugins",
