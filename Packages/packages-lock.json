@@ -1,7 +1,7 @@
 {
   "dependencies": {
     "com.tdw.better.commons": {
-      "version": "0.0.22",
+      "version": "0.0.33",
       "depth": 0,
       "source": "registry",
       "dependencies": {
@@ -16,6 +16,16 @@
       "dependencies": {},
       "url": "https://package.openupm.com"
     },
+    "com.tdw.better.locators": {
+      "version": "0.1.12",
+      "depth": 0,
+      "source": "registry",
+      "dependencies": {
+        "com.tdw.better.internal.core": "0.0.2",
+        "com.tdw.better.commons": "0.0.7"
+      },
+      "url": "https://package.openupm.com"
+    },
     "com.tdw.better.projectsettings": {
       "version": "0.1.3",
       "depth": 0,
@@ -24,6 +34,15 @@
         "com.tdw.better.singletons": "0.1.0",
         "com.tdw.better.internal.core": "0.0.2",
         "com.tdw.better.commons": "0.0.22"
+      },
+      "url": "https://package.openupm.com"
+    },
+    "com.tdw.better.services": {
+      "version": "0.1.2",
+      "depth": 0,
+      "source": "registry",
+      "dependencies": {
+        "com.tdw.better.internal.core": "0.0.2"
       },
       "url": "https://package.openupm.com"
     },
@@ -118,11 +137,11 @@
       }
     },
     "com.uurha.betterattributes": {
-      "version": "3.1.5",
+      "version": "3.1.8",
       "depth": 0,
       "source": "registry",
       "dependencies": {
-        "com.tdw.better.commons": "0.0.16",
+        "com.tdw.better.commons": "0.0.32",
         "com.tdw.better.internal.core": "0.0.2"
       },
       "url": "https://package.openupm.com"
