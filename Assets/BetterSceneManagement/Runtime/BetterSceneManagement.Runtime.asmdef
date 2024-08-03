@@ -20,17 +20,17 @@
     "versionDefines": [
         {
             "name": "com.tdw.better.singletons",
-            "expression": "0.0.7",
+            "expression": "0.1.0",
             "define": "BETTER_SINGLETONS"
         },
         {
             "name": "com.tdw.better.services",
-            "expression": "0.0.4",
+            "expression": "0.1.2",
             "define": "BETTER_SERVICES"
         },
         {
             "name": "com.tdw.better.locators",
-            "expression": "0.0.7",
+            "expression": "0.1.12",
             "define": "BETTER_LOCATORS"
         }
     ],
