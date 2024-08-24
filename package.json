@@ -1,7 +1,7 @@
 {
   "name": "com.uurha.betterscenemanagement",
   "displayName": "[Deprecated] Better Scene Management",
-  "version": "0.3.5",
+  "version": "0.3.6",
   "unity": "2021.3",
   "description": "Scene loader with ability to load and serialize SceneAssets",
   "dependencies": {
@@ -14,10 +14,10 @@
     "name": "Better Plugins",
     "url": "https://github.com/techno-dwarf-works"
   },
-  "changelogUrl": "https://github.com/techno-dwarf-works/better-scene-management",
-  "documentationUrl": "https://github.com/techno-dwarf-works/better-scene-management/tree/main#readme",
+  "changelogUrl": "https://github.com/techno-dwarf-works/better-scene-management-legacy",
+  "documentationUrl": "https://github.com/techno-dwarf-works/better-scene-management-legacy/tree/main#readme",
   "license": "MIT",
-  "licensesUrl":"https://github.com/techno-dwarf-works/better-scene-management/blob/main/LICENSE",
+  "licensesUrl":"https://github.com/techno-dwarf-works/better-scene-management-legacy/blob/main/LICENSE",
   "keywords": [
     "scene",
     "scene management",
